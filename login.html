@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acessar Precificador</title>
+</head>
+<body style="font-family: Arial;">
+
+  <div style="max-width:400px;margin:80px auto;text-align:center;">
+    <h2>Acessar calculadora</h2>
+    <p>Digite o e-mail usado na compra</p>
+
+    <input id="email" type="email" placeholder="seu@email.com"
+      style="width:100%;height:48px;border-radius:12px;border:1px solid #ccc;padding:0 10px;font-size:16px;">
+
+    <button onclick="login()"
+      style="width:100%;height:48px;margin-top:12px;border-radius:12px;border:0;background:#39b6a0;color:#fff;font-weight:700;">
+      Receber link de acesso
+    </button>
+
+    <p id="msg" style="margin-top:12px;color:#666;"></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      "https://qdccvgsubngerbydekpi.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY2N2Z3N1Ym5nZXJieWRla3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzQ3MTQsImV4cCI6MjA5MzExMDcxNH0.hvQ-_20waDJ57gi4j1UtNmmI5_UPsSs49-X5rBHYrno"
+    );
+
+    async function login() {
+      const email = document.getElementById("email").value;
+      const msg = document.getElementById("msg");
+
+      if (!email) {
+        msg.innerText = "Digite um e-mail";
+        return;
+      }
+
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          emailRedirectTo: window.location.origin + "/app.html"
+        }
+      });
+
+      if (error) {
+        msg.innerText = "Erro ao enviar e-mail";
+      } else {
+        msg.innerText = "Verifique seu e-mail 📩";
+      }
+    }
+  </script>
+
+</body>
+</html>
