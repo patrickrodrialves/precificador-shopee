@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precificador Shopee</title>
+</head>
+<body style="font-family: Arial;">
+
+  <div id="loading" style="text-align:center;margin-top:80px;">
+    Verificando acesso...
+  </div>
+
+  <div id="appContent" style="display:none;text-align:center;margin-top:80px;">
+    <h1>Calculadora liberada ✅</h1>
+    <p>Seu login funcionou.</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseClient = window.supabase.createClient(
+      "https://qdccvgsubngerbydekpi.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY2N2Z3N1Ym5nZXJieWRla3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzQ3MTQsImV4cCI6MjA5MzExMDcxNH0.hvQ-_20waDJ57gi4j1UtNmmI5_UPsSs49-X5rBHYrno"
+    );
+
+    async function verificarAcesso() {
+      const hash = window.location.hash;
+
+      if (hash && hash.includes("access_token")) {
+        const params = new URLSearchParams(hash.substring(1));
+
+        const access_token = params.get("access_token");
+        const refresh_token = params.get("refresh_token");
+
+        if (access_token && refresh_token) {
+          await supabaseClient.auth.setSession({
+            access_token,
+            refresh_token
+          });
+
+          window.history.replaceState({}, document.title, "/app.html");
+        }
+      }
+
+      const { data, error } = await supabaseClient.auth.getSession();
+
+      if (error || !data.session) {
+        window.location.href = "/login.html";
+        return;
+      }
+
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("appContent").style.display = "block";
+    }
+
+    verificarAcesso();
+  </script>
+
+</body>
+</html>
