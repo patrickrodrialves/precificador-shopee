@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso não liberado</title>
+</head>
+<body style="font-family:Arial;">
+
+  <div style="max-width:440px;margin:80px auto;text-align:center;padding:24px;">
+    <h2>Acesso não liberado</h2>
+    <p>Não encontramos uma compra ativa para este e-mail.</p>
+
+    <a href="/login.html" style="display:inline-block;margin-top:16px;color:#39b6a0;font-weight:700;">
+      Tentar outro e-mail
+    </a>
+  </div>
+
+</body>
+</html>
