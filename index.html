@@ -2,10 +2,38 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=/login.html">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Precificador Shopee</title>
 </head>
-<body>
-  <p>Redirecionando...</p>
+<body style="font-family:Arial;text-align:center;margin-top:80px;">
+  <p>Carregando...</p>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseClient = window.supabase.createClient(
+      "https://qdccvgsubngerbydekpi.supabase.co",
+      "SUA_ANON_KEY_AQUI",
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
+      }
+    );
+
+    async function redirecionar() {
+      const { data } = await supabaseClient.auth.getSession();
+
+      if (data.session) {
+        window.location.href = "/app.html";
+      } else {
+        window.location.href = "/login.html";
+      }
+    }
+
+    redirecionar();
+  </script>
 </body>
 </html>
