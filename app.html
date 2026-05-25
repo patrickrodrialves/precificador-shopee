@@ -637,6 +637,13 @@
     const supabaseClient = window.supabase.createClient(
       "https://qdccvgsubngerbydekpi.supabase.co",
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY2N2Z3N1Ym5nZXJieWRla3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzQ3MTQsImV4cCI6MjA5MzExMDcxNH0.hvQ-_20waDJ57gi4j1UtNmmI5_UPsSs49-X5rBHYrno"
+      {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
     );
 
     async function verificarAcesso() {
