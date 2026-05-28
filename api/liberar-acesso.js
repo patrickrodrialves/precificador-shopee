@@ -119,3 +119,4 @@ return res.status(200).json({
   resend_result: resendResult,
   supabase_return: magicData
 });
+}
