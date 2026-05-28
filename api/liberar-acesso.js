@@ -23,28 +23,58 @@ export default async function handler(req, res) {
 
   const cleanEmail = String(email).trim().toLowerCase();
 
-  const response = await fetch(`${process.env.SUPABASE_URL}/rest/v1/allowed_users`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": process.env.SUPABASE_SERVICE_ROLE_KEY,
-      "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-      "Prefer": "resolution=merge-duplicates"
-    },
-    body: JSON.stringify({
-      email: cleanEmail,
-      active: true,
-      source: "yampi"
-    })
-  });
+  // libera acesso
+  const saveResponse = await fetch(
+    `${process.env.SUPABASE_URL}/rest/v1/allowed_users`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": process.env.SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+        "Prefer": "resolution=merge-duplicates"
+      },
+      body: JSON.stringify({
+        email: cleanEmail,
+        active: true,
+        source: "yampi"
+      })
+    }
+  );
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    return res.status(500).json({ error: errorText });
+  if (!saveResponse.ok) {
+    const errorText = await saveResponse.text();
+
+    return res.status(500).json({
+      error: errorText
+    });
   }
+
+  // gera magic link
+  const magicResponse = await fetch(
+    `${process.env.SUPABASE_URL}/auth/v1/admin/generate_link`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": process.env.SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`
+      },
+      body: JSON.stringify({
+        type: "magiclink",
+        email: cleanEmail,
+        options: {
+          redirectTo: "https://precificador-shopee.vercel.app/app.html"
+        }
+      })
+    }
+  );
+
+  const magicData = await magicResponse.json();
 
   return res.status(200).json({
     success: true,
-    email: cleanEmail
+    email: cleanEmail,
+    magic_link: magicData?.properties?.action_link || null
   });
 }
