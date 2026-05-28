@@ -62,12 +62,10 @@ export default async function handler(req, res) {
         "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`
       },
       body: JSON.stringify({
-        type: "magiclink",
-        email: cleanEmail,
-        options: {
-          redirectTo: "https://precificador-shopee.vercel.app/app.html"
-        }
-      })
+  type: "magiclink",
+  email: cleanEmail,
+  redirect_to: "https://precificador-shopee.vercel.app/app.html"
+})
     }
   );
 
