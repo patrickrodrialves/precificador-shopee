@@ -77,57 +77,46 @@ export default async function handler(req, res) {
   magicData?.action_link ||
   magicData?.properties?.action_link;
 
+let resendResult = null;
+
 if (magicLink) {
-await fetch("https://api.resend.com/emails", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    from: "SellZen <onboarding@resend.dev>",
-    to: cleanEmail,
-    subject: "Seu acesso foi liberado 🔓",
-    html: `
-      <div style="font-family:Arial;padding:40px;text-align:center;">
-        <h1>Seu acesso foi liberado 🚀</h1>
+  const resendResponse = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from: "SellZen <onboarding@resend.dev>",
+      to: cleanEmail,
+      subject: "Seu acesso foi liberado 🔓",
+      html: `
+        <div style="font-family:Arial;padding:40px;text-align:center;">
+          <h1>Seu acesso foi liberado 🚀</h1>
 
-        <p>
-          Clique no botão abaixo para acessar sua calculadora.
-        </p>
+          <p>Clique no botão abaixo para acessar sua calculadora.</p>
 
-        <a href="${magicLink}"
-          style="
-            display:inline-block;
-            margin-top:20px;
-            background:#39b6a0;
-            color:#fff;
-            padding:14px 24px;
-            border-radius:12px;
-            text-decoration:none;
-            font-weight:bold;
-          ">
-          Acessar calculadora
-        </a>
+          <a href="${magicLink}"
+            style="display:inline-block;margin-top:20px;background:#39b6a0;color:#fff;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:bold;">
+            Acessar calculadora
+          </a>
 
-        <p style="margin-top:30px;color:#777;font-size:14px;">
-          Este link faz login automático.
-        </p>
-      </div>
-    `
-  })
-});
+          <p style="margin-top:30px;color:#777;font-size:14px;">
+            Este link faz login automático.
+          </p>
+        </div>
+      `
+    })
+  });
+
+  resendResult = await resendResponse.json();
 }
 
   return res.status(200).json({
   success: true,
   email: cleanEmail,
-  magic_link:
-    magicData?.properties?.action_link ||
-    magicData?.action_link ||
-    magicData?.confirmation_url ||
-    magicData?.properties?.email_otp ||
-    null,
+  magic_link: magicLink,
+  resend_result: resendResult,
   supabase_return: magicData
 });
 }
