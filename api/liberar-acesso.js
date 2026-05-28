@@ -112,11 +112,10 @@ if (magicLink) {
   resendResult = await resendResponse.json();
 }
 
-  return res.status(200).json({
+return res.status(200).json({
   success: true,
   email: cleanEmail,
   magic_link: magicLink,
   resend_result: resendResult,
   supabase_return: magicData
 });
-}
