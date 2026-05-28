@@ -73,8 +73,14 @@ export default async function handler(req, res) {
   const magicData = await magicResponse.json();
 
   return res.status(200).json({
-    success: true,
-    email: cleanEmail,
-    magic_link: magicData?.properties?.action_link || null
-  });
+  success: true,
+  email: cleanEmail,
+  magic_link:
+    magicData?.properties?.action_link ||
+    magicData?.action_link ||
+    magicData?.confirmation_url ||
+    magicData?.properties?.email_otp ||
+    null,
+  supabase_return: magicData
+});
 }
