@@ -25,20 +25,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-  const supabaseClient = window.supabase.createClient(
-    "https://qdccvgsubngerbydekpi.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY2N2Z3N1Ym5nZXJieWRla3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzQ3MTQsImV4cCI6MjA5MzExMDcxNH0.hvQ-_20waDJ57gi4j1UtNmmI5_UPsSs49-X5rBHYrno",
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
+    const supabaseClient = window.supabase.createClient(
+      "https://qdccvgsubngerbydekpi.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY2N2Z3N1Ym5nZXJieWRla3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzQ3MTQsImV4cCI6MjA5MzExMDcxNH0.hvQ-_20waDJ57gi4j1UtNmmI5_UPsSs49-X5rBHYrno",
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
       }
-    }
-  );
+    );
 
-  document.getElementById("loginBtn").addEventListener("click", async function () {
-      const email = document.getElementById("email").value.trim();
+    document.getElementById("loginBtn").addEventListener("click", async function () {
+      const email = document.getElementById("email").value.trim().toLowerCase();
       const msg = document.getElementById("msg");
       const btn = document.getElementById("loginBtn");
 
@@ -47,29 +47,32 @@
         return;
       }
 
-      btn.innerText = "Enviando...";
+      msg.innerText = "";
+      btn.innerText = "Verificando...";
       btn.disabled = true;
 
-     const cleanEmail = email.trim().toLowerCase();
+      const { data: allowedUsers, error: allowedError } = await supabaseClient
+        .from("allowed_users")
+        .select("email, active")
+        .ilike("email", email)
+        .limit(1);
 
-const { data: allowedUsers, error: allowedError } = await supabaseClient
-  .from("allowed_users")
-  .select("email, active")
-  .ilike("email", cleanEmail)
-  .limit(1);
+      if (
+        allowedError ||
+        !allowedUsers ||
+        allowedUsers.length === 0 ||
+        allowedUsers[0].active !== true
+      ) {
+        msg.innerText = "Esse e-mail não possui acesso liberado.";
+        btn.innerText = "Receber link de acesso";
+        btn.disabled = false;
+        return;
+      }
 
-console.log("allowedUsers:", allowedUsers);
-console.log("allowedError:", allowedError);
+      btn.innerText = "Enviando...";
 
-if (
-  allowedError ||
-  !allowedUsers ||
-  allowedUsers.length === 0 ||
-  allowedUsers[0].active !== true
-) {
-    
       const { error } = await supabaseClient.auth.signInWithOtp({
-        email: cleanEmail,
+        email: email,
         options: {
           emailRedirectTo: window.location.origin + "/app.html"
         }
