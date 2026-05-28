@@ -55,19 +55,18 @@
 const { data: allowedUsers, error: allowedError } = await supabaseClient
   .from("allowed_users")
   .select("email, active")
-  .eq("email", cleanEmail)
-  .eq("active", true)
+  .ilike("email", cleanEmail)
   .limit(1);
 
 console.log("allowedUsers:", allowedUsers);
 console.log("allowedError:", allowedError);
 
-if (allowedError || !allowedUsers || allowedUsers.length === 0) {
-  msg.innerText = "Esse e-mail não possui acesso liberado.";
-  btn.innerText = "Receber link de acesso";
-  btn.disabled = false;
-  return;
-}
+if (
+  allowedError ||
+  !allowedUsers ||
+  allowedUsers.length === 0 ||
+  allowedUsers[0].active !== true
+) {
     
       const { error } = await supabaseClient.auth.signInWithOtp({
         email: cleanEmail,
