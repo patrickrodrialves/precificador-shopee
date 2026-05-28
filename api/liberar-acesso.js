@@ -1,4 +1,7 @@
+import { Resend } from "resend";
+
 export default async function handler(req, res) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
@@ -72,6 +75,45 @@ export default async function handler(req, res) {
   );
 
   const magicData = await magicResponse.json();
+
+  const magicLink =
+  magicData?.action_link ||
+  magicData?.properties?.action_link;
+
+if (magicLink) {
+  await resend.emails.send({
+    from: "SellZen <onboarding@resend.dev>",
+    to: cleanEmail,
+    subject: "Seu acesso foi liberado 🔓",
+    html: `
+      <div style="font-family:Arial;padding:40px;text-align:center;">
+        <h1>Seu acesso foi liberado 🚀</h1>
+
+        <p>
+          Clique no botão abaixo para acessar sua calculadora.
+        </p>
+
+        <a href="${magicLink}"
+          style="
+            display:inline-block;
+            margin-top:20px;
+            background:#39b6a0;
+            color:#fff;
+            padding:14px 24px;
+            border-radius:12px;
+            text-decoration:none;
+            font-weight:bold;
+          ">
+          Acessar calculadora
+        </a>
+
+        <p style="margin-top:30px;color:#777;font-size:14px;">
+          Este link faz login automático.
+        </p>
+      </div>
+    `
+  });
+}
 
   return res.status(200).json({
   success: true,
