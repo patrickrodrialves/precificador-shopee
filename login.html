@@ -50,6 +50,20 @@
       btn.innerText = "Enviando...";
       btn.disabled = true;
 
+      const { data: allowedUser, error: allowedError } = await supabaseClient
+  .from("allowed_users")
+  .select("*")
+  .eq("email", email)
+  .eq("active", true)
+  .single();
+
+if (allowedError || !allowedUser) {
+  msg.innerText = "Esse e-mail não possui acesso liberado.";
+  btn.innerText = "Receber link de acesso";
+  btn.disabled = false;
+  return;
+}
+    
       const { error } = await supabaseClient.auth.signInWithOtp({
         email: email,
         options: {
