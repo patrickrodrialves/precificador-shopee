@@ -1,7 +1,4 @@
-import { Resend } from "resend";
-
 export default async function handler(req, res) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
@@ -81,7 +78,13 @@ export default async function handler(req, res) {
   magicData?.properties?.action_link;
 
 if (magicLink) {
-  await resend.emails.send({
+await fetch("https://api.resend.com/emails", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
     from: "SellZen <onboarding@resend.dev>",
     to: cleanEmail,
     subject: "Seu acesso foi liberado 🔓",
@@ -112,7 +115,8 @@ if (magicLink) {
         </p>
       </div>
     `
-  });
+  })
+});
 }
 
   return res.status(200).json({
