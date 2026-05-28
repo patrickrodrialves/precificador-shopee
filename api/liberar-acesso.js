@@ -25,15 +25,16 @@ export default async function handler(req, res) {
 
   // libera acesso
   const saveResponse = await fetch(
-    `${process.env.SUPABASE_URL}/rest/v1/allowed_users`,
+    `${process.env.SUPABASE_URL}/rest/v1/allowed_users?on_conflict=email`,
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "apikey": process.env.SUPABASE_SERVICE_ROLE_KEY,
-        "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-        "Prefer": "resolution=merge-duplicates"
-      },
+  "Content-Type": "application/json",
+  "apikey": process.env.SUPABASE_SERVICE_ROLE_KEY,
+  "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+  "Prefer": "resolution=merge-duplicates",
+  "on_conflict": "email"
+},
       body: JSON.stringify({
         email: cleanEmail,
         active: true,
