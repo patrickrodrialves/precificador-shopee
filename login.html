@@ -1,26 +1,48 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acessar Precificador</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acessar MargemUp</title>
 </head>
-<body style="font-family: Arial;">
 
-  <div style="max-width:400px;margin:80px auto;text-align:center;">
-    <h2>Acessar calculadora</h2>
-    <p>Digite o e-mail usado na compra</p>
+<body>
+  <main class="mu-page">
+    <div class="mu-bg mu-bg-1"></div>
+    <div class="mu-bg mu-bg-2"></div>
 
-    <input id="email" type="email" placeholder="seu@email.com"
-      style="width:100%;height:48px;border-radius:12px;border:1px solid #ccc;padding:0 10px;font-size:16px;">
+    <section class="mu-card">
+      <div class="mu-logo">
+        <div class="mu-logo-icon">M</div>
+        <div>
+          <strong>MargemUp</strong>
+          <span>Calculadora Shopee</span>
+        </div>
+      </div>
 
-    <button id="loginBtn" type="button"
-      style="width:100%;height:48px;margin-top:12px;border-radius:12px;border:0;background:#39b6a0;color:#fff;font-weight:700;cursor:pointer;">
-      Receber link de acesso
-    </button>
+      <div class="mu-badge">Acesso protegido</div>
 
-    <p id="msg" style="margin-top:12px;color:#666;"></p>
-  </div>
+      <h1>Acesse sua calculadora</h1>
+      <p class="mu-subtitle">
+        Digite o e-mail usado na compra para receber seu link seguro de acesso.
+      </p>
+
+      <div class="mu-form">
+        <label for="email">E-mail da compra</label>
+        <input id="email" type="email" placeholder="seu@email.com" />
+
+        <button id="loginBtn" type="button">
+          Receber link de acesso
+        </button>
+
+        <p id="msg"></p>
+      </div>
+
+      <div class="mu-footer">
+        Compra aprovada? O acesso é liberado automaticamente.
+      </div>
+    </section>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -43,7 +65,7 @@
       const btn = document.getElementById("loginBtn");
 
       if (!email) {
-        msg.innerText = "Digite um e-mail";
+        msg.innerText = "Digite um e-mail.";
         return;
       }
 
@@ -63,7 +85,7 @@
         allowedUsers.length === 0 ||
         allowedUsers[0].active !== true
       ) {
-        msg.innerText = "Esse e-mail não possui acesso liberado.";
+        msg.innerText = "Esse e-mail ainda não possui acesso liberado.";
         btn.innerText = "Receber link de acesso";
         btn.disabled = false;
         return;
@@ -90,5 +112,209 @@
     });
   </script>
 
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0E1116;
+      color: #fff;
+    }
+
+    .mu-page {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .mu-bg {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(80px);
+      opacity: .75;
+      pointer-events: none;
+    }
+
+    .mu-bg-1 {
+      width: 520px;
+      height: 520px;
+      background: rgba(238, 77, 45, .18);
+      top: -180px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .mu-bg-2 {
+      width: 420px;
+      height: 420px;
+      background: rgba(34, 197, 94, .12);
+      right: -120px;
+      bottom: -140px;
+    }
+
+    .mu-card {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+      padding: 34px;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(17, 23, 34, .88);
+      box-shadow: 0 30px 90px rgba(0,0,0,.45);
+      backdrop-filter: blur(22px);
+    }
+
+    .mu-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .mu-logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 18px;
+      background: #EE4D2D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .mu-logo strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .mu-logo span {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: #71717a;
+    }
+
+    .mu-badge {
+      display: inline-flex;
+      margin-bottom: 18px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(238,77,45,.22);
+      background: rgba(238,77,45,.10);
+      color: #fed7aa;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.08;
+      letter-spacing: -1px;
+    }
+
+    .mu-subtitle {
+      margin: 14px 0 26px;
+      color: #a1a1aa;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .mu-form label {
+      display: block;
+      margin-bottom: 8px;
+      color: #d4d4d8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mu-form input {
+      width: 100%;
+      height: 52px;
+      border-radius: 17px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      padding: 0 15px;
+      font-size: 16px;
+      outline: none;
+      transition: .2s ease;
+    }
+
+    .mu-form input::placeholder {
+      color: #71717a;
+    }
+
+    .mu-form input:focus {
+      border-color: rgba(238,77,45,.65);
+      box-shadow: 0 0 0 4px rgba(238,77,45,.14);
+    }
+
+    .mu-form button {
+      width: 100%;
+      height: 52px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 17px;
+      background: #EE4D2D;
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 18px 42px rgba(238,77,45,.25);
+      transition: .2s ease;
+    }
+
+    .mu-form button:hover {
+      transform: translateY(-1px);
+      background: #ff5a36;
+    }
+
+    .mu-form button:disabled {
+      cursor: not-allowed;
+      opacity: .75;
+      transform: none;
+    }
+
+    #msg {
+      min-height: 22px;
+      margin: 14px 0 0;
+      text-align: center;
+      color: #a1a1aa;
+      font-size: 14px;
+    }
+
+    .mu-footer {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: #71717a;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 520px) {
+      .mu-page {
+        padding: 14px;
+      }
+
+      .mu-card {
+        padding: 26px 20px;
+        border-radius: 26px;
+      }
+
+      h1 {
+        font-size: 29px;
+      }
+    }
+  </style>
 </body>
 </html>
