@@ -799,44 +799,60 @@
 );
 
     async function verificarAcesso() {
-      const hash = window.location.hash;
+  const hash = window.location.hash;
 
-      if (hash && hash.includes("access_token")) {
-        const params = new URLSearchParams(hash.substring(1));
-        const access_token = params.get("access_token");
-        const refresh_token = params.get("refresh_token");
+  if (hash && hash.includes("access_token")) {
+    const params = new URLSearchParams(hash.substring(1));
+    const access_token = params.get("access_token");
+    const refresh_token = params.get("refresh_token");
 
-        if (access_token && refresh_token) {
-          await supabaseClient.auth.setSession({
-            access_token,
-            refresh_token
-          });
+    if (access_token && refresh_token) {
+      await supabaseClient.auth.setSession({
+        access_token,
+        refresh_token
+      });
 
-          window.history.replaceState({}, document.title, "/app.html");
-        }
-      }
-
-      const { data, error } = await supabaseClient.auth.getSession();
-
-      if (error || !data.session) {
-        window.location.href = "/login.html";
-        return;
-      }
-
-      document.getElementById("loading").style.display = "none";
-      document.getElementById("appContent").style.display = "block";
-
-      const logoutBtn = document.getElementById("szLogout");
-      if (logoutBtn && !logoutBtn.dataset.ready) {
-        logoutBtn.dataset.ready = "true";
-        logoutBtn.addEventListener("click", async function() {
-          await supabaseClient.auth.signOut();
-          window.location.href = "/login.html";
-        });
-      }
-
-      iniciarCalculadoraShopee();
+      window.history.replaceState({}, document.title, "/app.html");
     }
+  }
+
+  let { data, error } = await supabaseClient.auth.getSession();
+
+  if (!data.session) {
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    const retry = await supabaseClient.auth.getSession();
+    data = retry.data;
+    error = retry.error;
+  }
+
+  if (!data.session) {
+    const refresh = await supabaseClient.auth.refreshSession();
+    data = refresh.data;
+    error = refresh.error;
+  }
+
+  if (error || !data.session) {
+    window.location.href = "/login.html";
+    return;
+  }
+
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("appContent").style.display = "block";
+
+  const logoutBtn = document.getElementById("szLogout");
+  if (logoutBtn && !logoutBtn.dataset.ready) {
+    logoutBtn.dataset.ready = "true";
+    logoutBtn.addEventListener("click", async function() {
+      await supabaseClient.auth.signOut();
+      window.location.href = "/login.html";
+    });
+  }
+
+  if (!window.__calculadoraIniciada) {
+    window.__calculadoraIniciada = true;
+    iniciarCalculadoraShopee();
+  }
+}
 
     function iniciarCalculadoraShopee() {
       const root = document.getElementById('szPrecificador');
