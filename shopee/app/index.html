@@ -1,1 +1,1198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precificador Shopee</title>
+</head>
+<body style="margin:0;background:#0E1116;font-family:Arial, sans-serif;">
 
+  <div id="loading" style="text-align:center;margin-top:80px;font-family:Arial;color:#fff;">
+    Verificando acesso...
+  </div>
+
+  <div id="appContent" style="display:none;">
+
+    <header class="mz-header">
+      <div class="mz-brand">
+        <div class="mz-logo">M</div>
+        <div>
+          <div class="mz-title">MargemUp</div>
+          <div class="mz-subtitle">Calculadora Shopee</div>
+        </div>
+      </div>
+      <div class="mz-header-actions">
+        <span class="mz-status"><span></span>Acesso ativo</span>
+        <button type="button" id="szLogout" class="mz-logout">Sair</button>
+      </div>
+    </header>
+
+    <div class="mz-bg-glow mz-bg-glow-1"></div>
+    <div class="mz-bg-glow mz-bg-glow-2"></div>
+
+    <div class="sz-app" id="szPrecificador">
+
+      <div class="sz-left">
+
+        <div class="sz-block">
+          <h4>Tipo de Vendedor</h4>
+          <div class="sz-toggle" data-group="seller">
+            <button type="button" class="active" data-value="3.5">Não Indicado</button>
+            <button type="button" data-value="2.5">Vendedor Indicado</button>
+            <button type="button" data-value="1">Loja Oficial</button>
+          </div>
+        </div>
+
+        <div class="sz-block">
+          <h4>Custos do Produto</h4>
+          <div class="sz-grid-2">
+            <div>
+              <label>Custo do Produto</label>
+              <input id="szCusto" type="text" inputmode="numeric" autocomplete="off" placeholder="Ex: R$ 20,91">
+            </div>
+
+            <div>
+              <label>Custo da Embalagem</label>
+              <input id="szEmbalagem" type="text" inputmode="numeric" autocomplete="off" placeholder="Ex: R$ 0,50">
+            </div>
+          </div>
+        </div>
+
+        <div class="sz-block">
+          <h4>Como deseja calcular?</h4>
+
+          <div class="sz-toggle sz-mode-toggle" data-group="mode">
+            <button type="button" class="active" data-mode="margem">
+              <span class="sz-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 17L9 12L13 15L20 8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M15 8H20V13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              Margem de Lucro
+            </button>
+
+            <button type="button" data-mode="lucro">
+              <span class="sz-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2.2"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2.2"/>
+                  <path d="M12 2V5M12 19V22M2 12H5M19 12H22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              Lucro Desejado
+            </button>
+
+            <button type="button" data-mode="preco">
+              <span class="sz-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3V21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                  <path d="M17 7.5C17 5.6 15.2 4.5 12.5 4.5H10.8C8.5 4.5 7 5.7 7 7.5C7 9.4 8.6 10.2 12 11C15.4 11.8 17 12.7 17 15C17 17 15.3 18.5 12.3 18.5H10.5C8.2 18.5 6.7 17.5 6.5 15.7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              Preço de Venda
+            </button>
+          </div>
+
+          <div class="sz-dynamic-field">
+            <label id="szLabelBase">Margem de lucro desejada (%)</label>
+            <input id="szValorBase" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 20">
+          </div>
+        </div>
+
+        <div class="sz-block">
+          <h4>Outras Configurações</h4>
+
+          <div class="sz-grid-2">
+            <div>
+              <label>Imposto (%)</label>
+              <input id="szImposto" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 7">
+              <small class="sz-save-note">valor salvo automaticamente</small>
+            </div>
+
+            <div>
+              <label>ROAS desejado</label>
+              <input id="szRoas" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 3">
+              <small class="sz-save-note">valor salvo automaticamente</small>
+            </div>
+
+            <div class="sz-full">
+              <label>Usa Shopee Acelera?</label>
+              <div class="sz-toggle" data-group="acelera">
+                <button type="button" class="active" data-acelera="sim">Sim</button>
+                <button type="button" data-acelera="nao">Não</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sz-block sz-marketing-block">
+          <button type="button" class="sz-collapse-toggle" id="szMarketingToggle">
+            <span>Central de Marketing</span>
+            <small>Opcional</small>
+          </button>
+
+          <div class="sz-collapse" id="szMarketingContent">
+
+            <div>
+              <label>Desconto da campanha (%)</label>
+              <input id="szDesconto" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 10">
+            </div>
+
+            <div>
+              <label>Cupom da loja</label>
+              <div class="sz-toggle" data-group="coupon">
+                <button type="button" class="active" data-coupon="percent">Porcentagem</button>
+                <button type="button" data-coupon="real">Valor Real</button>
+              </div>
+            </div>
+
+            <div>
+              <label id="szLabelCupom">Cupom da loja (%)</label>
+              <input id="szCupom" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 5">
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="sz-right">
+
+        <div class="sz-result-card">
+          <span class="sz-kicker">Resultado principal</span>
+
+          <div class="sz-main-result">
+            <p>Preço que você deve cadastrar</p>
+            <strong id="szPrecoFinal">R$ 0,00</strong>
+          </div>
+
+          <div class="sz-mini-results">
+            <div>
+              <small>Lucro estimado</small>
+              <strong id="szLucro">R$ 0,00</strong>
+            </div>
+
+            <div>
+              <small>Cliente paga</small>
+              <strong id="szPrecoCliente">R$ 0,00</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="sz-detail-card">
+          <h4>Detalhamento</h4>
+
+          <div class="sz-line">
+            <span>Comissão Shopee</span>
+            <strong id="szComissao">R$ 0,00</strong>
+          </div>
+
+          <div class="sz-line">
+            <span>Shopee Acelera</span>
+            <strong id="szAcelera">R$ 0,00</strong>
+          </div>
+
+          <div class="sz-line">
+            <span>Imposto</span>
+            <strong id="szImpostoValor">R$ 0,00</strong>
+          </div>
+
+          <div class="sz-line">
+            <span>Investimento Ads</span>
+            <strong id="szAds">R$ 0,00</strong>
+          </div>
+
+          <div class="sz-line">
+            <span>Desconto/Cupom</span>
+            <strong id="szDescontoTotal">R$ 0,00</strong>
+          </div>
+
+          <div class="sz-line total">
+            <span>Total de custos</span>
+            <strong id="szCustosTotais">R$ 0,00</strong>
+          </div>
+
+          <div class="sz-line total">
+            <span>Margem líquida</span>
+            <strong id="szMargem">0%</strong>
+          </div>
+
+          <p class="sz-helper" id="szRegraComissao">Informe os dados para calcular.</p>
+        </div>
+
+        <button type="button" id="szReset" class="sz-reset-btn">
+          Resetar valores
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+  :root {
+    --mz-bg: #0E1116;
+    --mz-panel: rgba(17, 23, 34, .92);
+    --mz-card: rgba(255,255,255,.045);
+    --mz-card-strong: rgba(255,255,255,.075);
+    --mz-border: rgba(255,255,255,.10);
+    --mz-border-strong: rgba(255,255,255,.16);
+    --mz-text: #ffffff;
+    --mz-muted: #A1A1AA;
+    --mz-muted-2: #71717A;
+    --mz-orange: #EE4D2D;
+    --mz-orange-2: #ff5a36;
+    --mz-green: #22C55E;
+  }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(238,77,45,.16), transparent 34%),
+      radial-gradient(circle at 100% 100%, rgba(34,197,94,.13), transparent 30%),
+      var(--mz-bg) !important;
+    color: var(--mz-text);
+    overflow-x: hidden;
+  }
+
+  .mz-bg-glow {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 999px;
+    filter: blur(72px);
+    opacity: .7;
+  }
+
+  .mz-bg-glow-1 {
+    width: 520px;
+    height: 280px;
+    background: rgba(238,77,45,.12);
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .mz-bg-glow-2 {
+    width: 420px;
+    height: 260px;
+    background: rgba(34,197,94,.10);
+    right: -160px;
+    bottom: -120px;
+  }
+
+  .mz-header {
+    position: relative;
+    z-index: 2;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 22px 18px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .mz-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mz-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mz-orange);
+    color: #fff;
+    font-weight: 950;
+    box-shadow: 0 18px 35px rgba(238,77,45,.24);
+  }
+
+  .mz-title {
+    font-size: 15px;
+    font-weight: 950;
+    letter-spacing: .2px;
+    color: #fff;
+  }
+
+  .mz-subtitle {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--mz-muted-2);
+  }
+
+  .mz-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mz-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--mz-border);
+    background: rgba(255,255,255,.04);
+    color: #d4d4d8;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .mz-status span {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--mz-green);
+    box-shadow: 0 0 18px rgba(34,197,94,.85);
+  }
+
+  .mz-logout {
+    height: 38px;
+    padding: 0 15px;
+    border-radius: 999px;
+    border: 1px solid var(--mz-border);
+    background: transparent;
+    color: #d4d4d8;
+    font-size: 12px;
+    font-weight: 850;
+    cursor: pointer;
+    transition: .2s ease;
+  }
+
+  .mz-logout:hover {
+    border-color: rgba(238,77,45,.45);
+    color: #fff;
+    background: rgba(238,77,45,.10);
+  }
+
+  #szPrecificador {
+    --sz-orange: var(--mz-orange);
+    --sz-green: var(--mz-green);
+    --sz-text: #fff;
+    --sz-muted: var(--mz-muted);
+    --sz-border: var(--mz-border);
+
+    position: relative;
+    z-index: 1;
+    max-width: 1320px;
+    margin: 24px auto 34px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) 410px;
+    gap: 22px;
+    font-family: inherit;
+    color: var(--sz-text);
+  }
+
+  #szPrecificador * { box-sizing: border-box; }
+
+  #szPrecificador .sz-left,
+  #szPrecificador .sz-result-card,
+  #szPrecificador .sz-detail-card {
+    background: var(--mz-panel);
+    border: 1px solid var(--mz-border);
+    box-shadow: 0 24px 70px rgba(0,0,0,.26);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  #szPrecificador .sz-left {
+    border-radius: 30px;
+    padding: 20px;
+  }
+
+  #szPrecificador .sz-block {
+    background: var(--mz-card);
+    border: 1px solid var(--mz-border);
+    border-radius: 24px;
+    padding: 19px;
+    margin-bottom: 15px;
+  }
+
+  #szPrecificador .sz-block:last-child { margin-bottom: 0; }
+
+  #szPrecificador h4 {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 900;
+    color: #fff;
+  }
+
+  #szPrecificador label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 760;
+    color: #d4d4d8;
+  }
+
+  #szPrecificador input {
+    width: 100%;
+    height: 50px;
+    border: 1px solid var(--mz-border);
+    border-radius: 17px;
+    background: rgba(0,0,0,.20);
+    padding: 0 14px;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    transition: .2s ease;
+  }
+
+  #szPrecificador input::placeholder { color: #71717a; }
+
+  #szPrecificador input:focus {
+    border-color: rgba(238,77,45,.65);
+    box-shadow: 0 0 0 4px rgba(238,77,45,.14);
+    background: rgba(0,0,0,.28);
+  }
+
+  #szPrecificador .sz-save-note {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.2;
+    color: #71717a;
+    font-weight: 650;
+  }
+
+  #szPrecificador .sz-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  #szPrecificador .sz-full { grid-column: 1 / -1; }
+
+  #szPrecificador .sz-toggle {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    width: 100%;
+  }
+
+  #szPrecificador .sz-toggle button {
+    flex: 1;
+    min-width: 0;
+    height: 47px;
+    border-radius: 999px;
+    border: 1px solid var(--mz-border);
+    background: rgba(255,255,255,.055);
+    color: #d4d4d8;
+    font-weight: 850;
+    font-size: 13px;
+    cursor: pointer;
+    transition: .22s ease;
+    white-space: nowrap;
+  }
+
+  #szPrecificador .sz-toggle button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(238,77,45,.38);
+    background: rgba(255,255,255,.075);
+  }
+
+  #szPrecificador .sz-toggle button.active {
+    color: #fff;
+    border-color: rgba(238,77,45,.70);
+    background:
+      radial-gradient(circle at 28% 12%, rgba(255,255,255,.28), transparent 28%),
+      linear-gradient(135deg, var(--mz-orange), var(--mz-orange-2));
+    box-shadow:
+      0 16px 32px rgba(238,77,45,.26),
+      inset 0 1px 0 rgba(255,255,255,.30);
+  }
+
+  #szPrecificador .sz-mode-toggle button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+  }
+
+  #szPrecificador .sz-icon {
+    width: 19px;
+    height: 19px;
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  #szPrecificador .sz-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  #szPrecificador .sz-dynamic-field { margin-top: 16px; }
+
+  #szPrecificador .sz-collapse-toggle {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  #szPrecificador .sz-collapse-toggle span {
+    font-size: 15px;
+    font-weight: 900;
+  }
+
+  #szPrecificador .sz-collapse-toggle small {
+    background: rgba(238,77,45,.12);
+    color: #ffb199;
+    border: 1px solid rgba(238,77,45,.18);
+    border-radius: 999px;
+    padding: 7px 11px;
+    font-weight: 850;
+  }
+
+  #szPrecificador .sz-collapse {
+    display: none;
+    margin-top: 18px;
+    gap: 16px;
+  }
+
+  #szPrecificador .sz-collapse.open { display: grid; }
+
+  #szPrecificador .sz-right {
+    position: sticky;
+    top: 18px;
+    align-self: start;
+  }
+
+  #szPrecificador .sz-result-card {
+    border-radius: 30px;
+    padding: 24px;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(34,197,94,.18), transparent 38%),
+      linear-gradient(180deg, rgba(17,23,34,.96), rgba(17,23,34,.82));
+  }
+
+  #szPrecificador .sz-kicker {
+    display: inline-flex;
+    background: rgba(34,197,94,.10);
+    color: #86efac;
+    border: 1px solid rgba(34,197,94,.24);
+    border-radius: 999px;
+    padding: 7px 11px;
+    font-size: 12px;
+    font-weight: 850;
+  }
+
+  #szPrecificador .sz-main-result { margin-top: 22px; }
+
+  #szPrecificador .sz-main-result p,
+  #szPrecificador .sz-mini-results small {
+    margin: 0 0 8px;
+    color: var(--mz-muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  #szPrecificador .sz-main-result strong {
+    display: block;
+    color: var(--mz-orange);
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: -1.5px;
+  }
+
+  #szPrecificador .sz-mini-results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  #szPrecificador .sz-mini-results div {
+    background: rgba(0,0,0,.18);
+    border: 1px solid var(--mz-border);
+    border-radius: 20px;
+    padding: 15px;
+  }
+
+  #szPrecificador .sz-mini-results strong {
+    color: #fff;
+    font-size: 21px;
+  }
+
+  #szPrecificador #szLucro {
+    color: var(--mz-green);
+  }
+
+  #szPrecificador .sz-detail-card {
+    margin-top: 15px;
+    border-radius: 26px;
+    padding: 20px;
+  }
+
+  #szPrecificador .sz-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+
+  #szPrecificador .sz-line span {
+    color: var(--mz-muted);
+    font-size: 13px;
+    font-weight: 650;
+  }
+
+  #szPrecificador .sz-line strong {
+    font-size: 14px;
+    color: #fff;
+    text-align: right;
+  }
+
+  #szPrecificador .sz-line.total strong,
+  #szPrecificador #szMargem {
+    color: var(--mz-green);
+  }
+
+  #szPrecificador .sz-helper {
+    margin: 14px 0 0;
+    color: #71717a;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  #szPrecificador .sz-reset-btn {
+    width: 100%;
+    height: 50px;
+    margin-top: 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(238,77,45,.24);
+    background: rgba(238,77,45,.10);
+    color: #ffb199;
+    font-weight: 900;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 16px 36px rgba(0,0,0,.16);
+    transition: .2s ease;
+  }
+
+  #szPrecificador .sz-reset-btn:hover {
+    background: rgba(238,77,45,.16);
+    transform: translateY(-1px);
+    border-color: rgba(238,77,45,.45);
+    color: #fff;
+  }
+
+  @media (max-width: 900px) {
+    .mz-header {
+      padding: 18px 10px 0;
+      align-items: flex-start;
+    }
+
+    .mz-header-actions {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .mz-status { display: none; }
+
+    #szPrecificador {
+      width: 100%;
+      max-width: 100%;
+      grid-template-columns: 1fr;
+      padding: 10px;
+      margin: 18px auto;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    #szPrecificador .sz-left {
+      width: 100%;
+      max-width: 100%;
+      padding: 14px;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    #szPrecificador .sz-block {
+      width: 100%;
+      max-width: 100%;
+      padding: 15px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    #szPrecificador .sz-right {
+      position: static;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    #szPrecificador .sz-grid-2 { grid-template-columns: 1fr; }
+
+    #szPrecificador .sz-toggle {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      overflow: visible;
+      width: 100%;
+    }
+
+    #szPrecificador .sz-toggle button {
+      width: 100%;
+      min-width: 0;
+      flex: none;
+      padding: 0 14px;
+      font-size: 13px;
+    }
+
+    #szPrecificador .sz-mode-toggle button { justify-content: flex-start; }
+    #szPrecificador .sz-main-result strong { font-size: 34px; }
+    #szPrecificador .sz-mini-results { grid-template-columns: 1fr; }
+
+    #szPrecificador .sz-reset-btn {
+      width: 100%;
+      height: 50px;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #szPrecificador { padding: 6px; }
+
+    #szPrecificador .sz-left,
+    #szPrecificador .sz-result-card,
+    #szPrecificador .sz-detail-card { border-radius: 22px; }
+
+    #szPrecificador .sz-block { padding: 14px; }
+    #szPrecificador .sz-toggle button { height: 44px; font-size: 13px; }
+    #szPrecificador .sz-main-result strong { font-size: 31px; }
+  }
+  </style>
+
+  <script>
+    const supabaseClient = window.supabase.createClient(
+  "https://qdccvgsubngerbydekpi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY2N2Z3N1Ym5nZXJieWRla3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzQ3MTQsImV4cCI6MjA5MzExMDcxNH0.hvQ-_20waDJ57gi4j1UtNmmI5_UPsSs49-X5rBHYrno",
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
+);
+
+    async function verificarAcesso() {
+  const hash = window.location.hash;
+
+  if (hash && hash.includes("access_token")) {
+    const params = new URLSearchParams(hash.substring(1));
+    const access_token = params.get("access_token");
+    const refresh_token = params.get("refresh_token");
+
+    if (access_token && refresh_token) {
+      await supabaseClient.auth.setSession({
+        access_token,
+        refresh_token
+      });
+
+      window.history.replaceState({}, document.title, "/app.html");
+    }
+  }
+
+  let { data, error } = await supabaseClient.auth.getSession();
+
+  if (!data.session) {
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    const retry = await supabaseClient.auth.getSession();
+    data = retry.data;
+    error = retry.error;
+  }
+
+  if (!data.session) {
+    const refresh = await supabaseClient.auth.refreshSession();
+    data = refresh.data;
+    error = refresh.error;
+  }
+
+  if (error || !data.session) {
+    window.location.href = "/login.html";
+    return;
+  }
+
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("appContent").style.display = "block";
+
+  const logoutBtn = document.getElementById("szLogout");
+  if (logoutBtn && !logoutBtn.dataset.ready) {
+    logoutBtn.dataset.ready = "true";
+    logoutBtn.addEventListener("click", async function() {
+      await supabaseClient.auth.signOut();
+      window.location.href = "/login.html";
+    });
+  }
+
+  if (!window.__calculadoraIniciada) {
+    window.__calculadoraIniciada = true;
+    iniciarCalculadoraShopee();
+  }
+}
+
+    function iniciarCalculadoraShopee() {
+      const root = document.getElementById('szPrecificador');
+
+      let sellerRate = 3.5;
+      let mode = 'margem';
+      let couponType = 'percent';
+      let usaAcelera = true;
+
+      const STORAGE_KEY = 'sz_precificador_config';
+
+      function money(value) {
+        return (value || 0).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+      }
+
+      function num(id) {
+        const el = document.getElementById(id);
+        if (!el) return 0;
+
+        let value = String(el.value || '').trim();
+        value = value.replace(/[^\d,.-]/g, '');
+
+        if (value.includes(',')) {
+          value = value.replace(/\./g, '').replace(',', '.');
+        }
+
+        return parseFloat(value) || 0;
+      }
+
+      function text(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.innerText = value;
+      }
+
+      function formatMoneyValue(value) {
+        const digits = String(value || '').replace(/\D/g, '');
+        const cents = parseInt(digits || '0', 10) / 100;
+        if (!digits) return '';
+
+        return cents.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+      }
+
+      function formatDecimalValue(value) {
+        return String(value || '')
+          .replace(/[^\d,]/g, '')
+          .replace(/(,.*),/g, '$1');
+      }
+
+      function isMoneyInput(input) {
+        if (input.id === 'szCusto') return true;
+        if (input.id === 'szEmbalagem') return true;
+        if (input.id === 'szValorBase' && (mode === 'lucro' || mode === 'preco')) return true;
+        if (input.id === 'szCupom' && couponType === 'real') return true;
+        return false;
+      }
+
+      function formatInput(input) {
+        if (isMoneyInput(input)) {
+          input.value = formatMoneyValue(input.value);
+        } else {
+          input.value = formatDecimalValue(input.value);
+        }
+      }
+
+      function refreshInputMasks() {
+        root.querySelectorAll('input').forEach(input => {
+          formatInput(input);
+        });
+      }
+
+      function saveFixedConfig() {
+        const data = {
+          sellerRate,
+          imposto: document.getElementById('szImposto').value,
+          roas: document.getElementById('szRoas').value
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      function loadFixedConfig() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+
+          const data = JSON.parse(raw);
+
+          if (data.sellerRate) {
+            sellerRate = parseFloat(data.sellerRate);
+
+            const sellerButtons = root.querySelectorAll('[data-group="seller"] button');
+            sellerButtons.forEach(button => {
+              button.classList.toggle('active', parseFloat(button.dataset.value) === sellerRate);
+            });
+          }
+
+          if (data.imposto !== undefined) {
+            document.getElementById('szImposto').value = data.imposto;
+          }
+
+          if (data.roas !== undefined) {
+            document.getElementById('szRoas').value = data.roas;
+          }
+        } catch(e) {}
+      }
+
+      function getCommission(price) {
+        if (price <= 79.99) return { value: price * 0.20 + 4, rule: 'Regra aplicada: 20% + R$ 4,00' };
+        if (price <= 99.99) return { value: price * 0.14 + 16, rule: 'Regra aplicada: 14% + R$ 16,00' };
+        if (price <= 199.99) return { value: price * 0.14 + 20, rule: 'Regra aplicada: 14% + R$ 20,00' };
+        return { value: price * 0.14 + 26, rule: 'Regra aplicada: 14% + R$ 26,00' };
+      }
+
+      function getCustomerPrice(price) {
+        const discountPct = num('szDesconto') / 100;
+        const coupon = num('szCupom');
+
+        let customerPrice = price;
+
+        if (discountPct > 0) {
+          customerPrice = customerPrice * (1 - discountPct);
+        }
+
+        if (coupon > 0) {
+          customerPrice = couponType === 'percent'
+            ? customerPrice * (1 - coupon / 100)
+            : customerPrice - coupon;
+        }
+
+        return Math.max(customerPrice, 0);
+      }
+
+      function simulate(price) {
+        const cost = num('szCusto');
+        const packaging = num('szEmbalagem');
+        const taxPct = num('szImposto') / 100;
+        const roas = num('szRoas');
+
+        const customerPrice = getCustomerPrice(price);
+        const discountTotal = Math.max(price - customerPrice, 0);
+
+        const commissionObj = getCommission(price);
+        const commission = commissionObj.value;
+
+        const afterCommission = Math.max(customerPrice - commission, 0);
+        const accelera = usaAcelera ? afterCommission * (sellerRate / 100) : 0;
+        const wallet = afterCommission - accelera;
+
+        const tax = customerPrice * taxPct;
+        const ads = roas > 0 ? customerPrice / roas : 0;
+
+        const totalCosts = cost + packaging + tax + ads;
+        const profit = wallet - totalCosts;
+        const margin = price > 0 ? (profit / price) * 100 : 0;
+
+        return {
+          price,
+          customerPrice,
+          commission,
+          commissionRule: commissionObj.rule,
+          accelera,
+          tax,
+          ads,
+          discountTotal,
+          totalCosts,
+          profit,
+          margin
+        };
+      }
+
+      function findIdealPrice() {
+        const base = num('szValorBase');
+
+        if (base <= 0) return simulate(0);
+        if (mode === 'preco') return simulate(base);
+
+        for (let price = 10; price <= 3000; price += 0.10) {
+          const result = simulate(price);
+
+          if (mode === 'margem' && result.margin >= base) return result;
+          if (mode === 'lucro' && result.profit >= base) return result;
+        }
+
+        return null;
+      }
+
+      function updateLabels() {
+        const baseInput = document.getElementById('szValorBase');
+        const cupomInput = document.getElementById('szCupom');
+
+        if (mode === 'margem') {
+          text('szLabelBase', 'Margem de lucro desejada (%)');
+          baseInput.placeholder = 'Ex: 20';
+          baseInput.setAttribute('inputmode', 'decimal');
+        }
+
+        if (mode === 'lucro') {
+          text('szLabelBase', 'Lucro líquido desejado (R$)');
+          baseInput.placeholder = 'Ex: R$ 15,00';
+          baseInput.setAttribute('inputmode', 'numeric');
+        }
+
+        if (mode === 'preco') {
+          text('szLabelBase', 'Preço de venda cadastrado (R$)');
+          baseInput.placeholder = 'Ex: R$ 79,90';
+          baseInput.setAttribute('inputmode', 'numeric');
+        }
+
+        text('szLabelCupom', couponType === 'percent' ? 'Cupom da loja (%)' : 'Cupom da loja (R$)');
+        cupomInput.placeholder = couponType === 'percent' ? 'Ex: 5' : 'Ex: R$ 10,00';
+        cupomInput.setAttribute('inputmode', couponType === 'real' ? 'numeric' : 'decimal');
+      }
+
+      function calculate() {
+        const result = findIdealPrice();
+
+        if (!result) {
+          text('szPrecoFinal', '—');
+          text('szLucro', '—');
+          text('szPrecoCliente', '—');
+          text('szRegraComissao', 'Não foi possível encontrar um preço dentro do limite testado.');
+          return;
+        }
+
+        text('szPrecoFinal', money(result.price));
+        text('szLucro', money(result.profit));
+        text('szPrecoCliente', money(result.customerPrice));
+        text('szComissao', money(result.commission));
+        text('szAcelera', money(result.accelera));
+        text('szImpostoValor', money(result.tax));
+        text('szAds', money(result.ads));
+        text('szDescontoTotal', money(result.discountTotal));
+        text('szCustosTotais', money(result.totalCosts));
+        text('szMargem', result.margin.toFixed(2).replace('.', ',') + '%');
+
+        text(
+          'szRegraComissao',
+          result.commissionRule + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '.'
+        );
+      }
+
+      function resetCalculator() {
+        const keepImposto = document.getElementById('szImposto').value;
+        const keepRoas = document.getElementById('szRoas').value;
+        const keepSellerRate = sellerRate;
+
+        root.querySelectorAll('input').forEach(input => {
+          if (input.id !== 'szImposto' && input.id !== 'szRoas') {
+            input.value = '';
+          }
+        });
+
+        sellerRate = keepSellerRate;
+        mode = 'margem';
+        couponType = 'percent';
+        usaAcelera = true;
+
+        document.getElementById('szImposto').value = keepImposto;
+        document.getElementById('szRoas').value = keepRoas;
+
+        root.querySelectorAll('.sz-toggle').forEach(group => {
+          const buttons = group.querySelectorAll('button');
+          buttons.forEach(button => button.classList.remove('active'));
+
+          if (group.dataset.group === 'seller') {
+            buttons.forEach(button => {
+              if (parseFloat(button.dataset.value) === sellerRate) button.classList.add('active');
+            });
+          } else {
+            if (buttons[0]) buttons[0].classList.add('active');
+          }
+        });
+
+        const marketing = document.getElementById('szMarketingContent');
+        if (marketing) marketing.classList.remove('open');
+
+        saveFixedConfig();
+        updateLabels();
+        calculate();
+      }
+
+      root.querySelectorAll('.sz-toggle button').forEach(button => {
+        button.addEventListener('click', function() {
+          const group = this.closest('.sz-toggle');
+
+          group.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+
+          if (this.dataset.value) {
+            sellerRate = parseFloat(this.dataset.value);
+            saveFixedConfig();
+          }
+
+          if (this.dataset.mode) mode = this.dataset.mode;
+          if (this.dataset.coupon) couponType = this.dataset.coupon;
+          if (this.dataset.acelera) usaAcelera = this.dataset.acelera === 'sim';
+
+          updateLabels();
+          refreshInputMasks();
+          calculate();
+        });
+      });
+
+      document.getElementById('szMarketingToggle').addEventListener('click', function() {
+        document.getElementById('szMarketingContent').classList.toggle('open');
+      });
+
+      document.getElementById('szReset').addEventListener('click', resetCalculator);
+
+      root.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+          formatInput(input);
+
+          if (input.id === 'szImposto' || input.id === 'szRoas') {
+            saveFixedConfig();
+          }
+
+          calculate();
+        });
+
+        input.addEventListener('blur', function() {
+          formatInput(input);
+          calculate();
+        });
+      });
+
+      loadFixedConfig();
+      updateLabels();
+      refreshInputMasks();
+      calculate();
+    }
+
+    verificarAcesso();
+  </script>
+
+</body>
+</html>
