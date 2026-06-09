@@ -844,7 +844,7 @@
     logoutBtn.dataset.ready = "true";
     logoutBtn.addEventListener("click", async function() {
       await supabaseClient.auth.signOut();
-      window.location.href = "/login.html";
+      window.location.href = "/shopee/login";
     });
   }
 
