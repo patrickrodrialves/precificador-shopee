@@ -64,7 +64,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
   type: "magiclink",
   email: cleanEmail,
-  redirect_to: "https://precificador-shopee.vercel.app/app.html"
+  redirect_to: "https://margemup.com.br/shopee/app"
 })
     }
   );
