@@ -812,7 +812,7 @@
         refresh_token
       });
 
-      window.history.replaceState({}, document.title, "/app.html");
+      window.history.replaceState({}, document.title, "/shopee/app");
     }
   }
 
@@ -832,7 +832,7 @@
   }
 
   if (error || !data.session) {
-    window.location.href = "/login.html";
+    window.location.href = "/shopee/login";
     return;
   }
 
