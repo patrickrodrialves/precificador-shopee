@@ -112,13 +112,6 @@ if (!response.ok) {
   return;
 }
 
-      if (error) {
-        msg.innerText = "Erro: " + error.message;
-        btn.innerText = "Receber link de acesso";
-        btn.disabled = false;
-        return;
-      }
-
       msg.innerText = "Link enviado! Verifique seu e-mail 📩";
       btn.innerText = "Reenviar link de acesso";
       btn.disabled = false;
