@@ -93,12 +93,24 @@
 
       btn.innerText = "Enviando...";
 
-      const { error } = await supabaseClient.auth.signInWithOtp({
-        email: email,
-        options: {
-          emailRedirectTo: window.location.origin + "/shopee/app"
-        }
-      });
+      const response = await fetch("/api/reenviar-acesso", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    email: email
+  })
+});
+
+const result = await response.json();
+
+if (!response.ok) {
+  msg.innerText = result.error || "Erro ao enviar link de acesso.";
+  btn.innerText = "Receber link de acesso";
+  btn.disabled = false;
+  return;
+}
 
       if (error) {
         msg.innerText = "Erro: " + error.message;
