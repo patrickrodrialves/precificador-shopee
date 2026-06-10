@@ -123,11 +123,11 @@
           <h4>Outras Configurações</h4>
 
           <div class="sz-grid-2">
-            <div>
+            <div id="szImpostoBox">
               <label>Imposto (%)</label>
               <input id="szImposto" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 7">
               <small class="sz-save-note">valor salvo automaticamente</small>
-            </div>
+          </div>
 
             <div class="sz-full">
               <label class="sz-check-row sz-check-main">
@@ -234,26 +234,32 @@
           </div>
 
           <div class="sz-mini-results">
-            <div>
-              <small>Lucro estimado</small>
-              <strong id="szLucro">R$ 0,00</strong>
-            </div>
+  <div>
+    <small>Lucro estimado</small>
+    <strong id="szLucro">R$ 0,00</strong>
+  </div>
 
-            <div>
-              <small>Cliente paga</small>
-              <strong id="szPrecoCliente">R$ 0,00</strong>
-            </div>
+  <div>
+    <small>Cliente paga</small>
+    <strong id="szPrecoCliente">R$ 0,00</strong>
+  </div>
+</div>
 
-            <div>
-              <small>Preço mínimo</small>
-              <strong id="szPrecoMinimo">R$ 0,00</strong>
-            </div>
+<div class="sz-result-separator">
+  Valores de segurança para sua venda
+</div>
 
-            <div>
-              <small>Limite de investimento em Ads</small>
-              <strong id="szCpaMaximo">R$ 0,00</strong>
-            </div>
-          </div>
+<div class="sz-mini-results sz-mini-results-safety">
+  <div>
+    <small>Preço mínimo</small>
+    <strong id="szPrecoMinimo">R$ 0,00</strong>
+  </div>
+
+  <div>
+    <small>Limite de investimento em Ads</small>
+    <strong id="szCpaMaximo">R$ 0,00</strong>
+  </div>
+</div>
         </div>
 
         <div class="sz-detail-card">
@@ -330,6 +336,19 @@
     --mz-green: #22C55E;
   }
 
+  #szPrecificador .sz-result-separator {
+  margin: 18px 0 10px;
+  color: #a1a1aa;
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+#szPrecificador .sz-mini-results-safety {
+  margin-top: 0;
+}
+    
   body {
     min-height: 100vh;
     background:
@@ -1271,7 +1290,7 @@
         const cost = num('szCusto');
         const packaging = num('szEmbalagem');
         const operational = num('szOperacional');
-        const taxPct = num('szImposto') / 100;
+        const taxPct = sellerDoc === 'cpf' ? 0 : num('szImposto') / 100;
         const roas = num('szRoas');
 
         const customerPrice = getCustomerPrice(price);
@@ -1346,6 +1365,10 @@
         const descontoOptions = document.getElementById('szDescontoOptions');
         const cupomOptions = document.getElementById('szCupomOptions');
         const afiliadosOptions = document.getElementById('szAfiliadosOptions');
+        const cpfExtra = document.getElementById('szCpfExtra');
+        const adsOptions = document.getElementById('szAdsOptions');
+        const aceleraOptions = document.getElementById('szAceleraOptions');
+        const impostoBox = document.getElementById('szImpostoBox');
 
         if (cpfExtra) {
           cpfExtra.style.display = sellerDoc === 'cpf' ? 'block' : 'none';
@@ -1369,6 +1392,10 @@
 
         if (afiliadosOptions) {
           afiliadosOptions.style.display = usaAfiliados ? 'block' : 'none';
+
+          if (impostoBox) {
+          impostoBox.style.display = sellerDoc === 'cpf' ? 'none' : 'block';
+            
         }
       }
 
