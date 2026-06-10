@@ -170,22 +170,52 @@
 
           <div class="sz-collapse" id="szMarketingContent">
 
-            <div>
+            <div class="sz-full">
+              <label class="sz-check-row sz-check-main">
+                <input id="szUsaDesconto" type="checkbox">
+                <span class="sz-custom-check"></span>
+                <span>Vou fazer desconto de campanha</span>
+              </label>
+            </div>
+
+            <div class="sz-full sz-marketing-option" id="szDescontoOptions" style="display:none;">
               <label>Desconto da campanha (%)</label>
               <input id="szDesconto" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 10">
             </div>
 
-            <div>
+            <div class="sz-full">
+              <label class="sz-check-row sz-check-main">
+                <input id="szUsaCupom" type="checkbox">
+                <span class="sz-custom-check"></span>
+                <span>Vou criar cupom do produto</span>
+              </label>
+            </div>
+
+            <div class="sz-full sz-marketing-option" id="szCupomOptions" style="display:none;">
               <label>Cupom da loja</label>
               <div class="sz-toggle" data-group="coupon">
                 <button type="button" class="active" data-coupon="percent">Porcentagem</button>
                 <button type="button" data-coupon="real">Valor Real</button>
               </div>
+
+              <div class="sz-field-spaced">
+                <label id="szLabelCupom">Cupom da loja (%)</label>
+                <input id="szCupom" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 5">
+              </div>
             </div>
 
-            <div>
-              <label id="szLabelCupom">Cupom da loja (%)</label>
-              <input id="szCupom" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 5">
+            <div class="sz-full">
+              <label class="sz-check-row sz-check-main">
+                <input id="szUsaAfiliados" type="checkbox">
+                <span class="sz-custom-check"></span>
+                <span>Vou utilizar Afiliados do Vendedor</span>
+              </label>
+            </div>
+
+            <div class="sz-full sz-marketing-option" id="szAfiliadosOptions" style="display:none;">
+              <label>Comissão de afiliados (%)</label>
+              <input id="szAfiliados" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 10">
+              <small class="sz-info-text">Percentual pago ao afiliado sobre o valor da venda. Exemplo: 10% significa R$10 de comissão a cada R$100 vendidos.</small>
             </div>
 
           </div>
@@ -220,7 +250,7 @@
             </div>
 
             <div>
-              <small>CPA máximo</small>
+              <small>Limite de investimento em Ads</small>
               <strong id="szCpaMaximo">R$ 0,00</strong>
             </div>
           </div>
@@ -252,6 +282,11 @@
           <div class="sz-line">
             <span>Desconto/Cupom</span>
             <strong id="szDescontoTotal">R$ 0,00</strong>
+          </div>
+
+          <div class="sz-line">
+            <span>Afiliados do Vendedor</span>
+            <strong id="szAfiliadosValor">R$ 0,00</strong>
           </div>
 
           <div class="sz-line total">
@@ -613,11 +648,16 @@
     background: rgba(255,255,255,.045);
   }
 
-  #szPrecificador .sz-acelera-options {
+  #szPrecificador .sz-acelera-options,
+  #szPrecificador .sz-marketing-option {
     padding: 14px;
     border-radius: 18px;
     border: 1px solid rgba(34,197,94,.18);
     background: rgba(34,197,94,.06);
+  }
+
+  #szPrecificador .sz-field-spaced {
+    margin-top: 14px;
   }
 
   #szPrecificador .sz-grid-2 {
@@ -1022,6 +1062,9 @@
       let couponType = 'percent';
       let usaAds = false;
       let usaAcelera = false;
+      let usaDesconto = false;
+      let usaCupom = false;
+      let usaAfiliados = false;
 
       const STORAGE_KEY = 'sz_precificador_config';
 
@@ -1098,6 +1141,9 @@
           cpfOver450,
           usaAds,
           usaAcelera,
+          usaDesconto,
+          usaCupom,
+          usaAfiliados,
           imposto: document.getElementById('szImposto').value,
           roas: document.getElementById('szRoas').value
         };
@@ -1148,6 +1194,24 @@
             if (aceleraCheck) aceleraCheck.checked = usaAcelera;
           }
 
+          if (data.usaDesconto !== undefined) {
+            usaDesconto = data.usaDesconto === true;
+            const descontoCheck = document.getElementById('szUsaDesconto');
+            if (descontoCheck) descontoCheck.checked = usaDesconto;
+          }
+
+          if (data.usaCupom !== undefined) {
+            usaCupom = data.usaCupom === true;
+            const cupomCheck = document.getElementById('szUsaCupom');
+            if (cupomCheck) cupomCheck.checked = usaCupom;
+          }
+
+          if (data.usaAfiliados !== undefined) {
+            usaAfiliados = data.usaAfiliados === true;
+            const afiliadosCheck = document.getElementById('szUsaAfiliados');
+            if (afiliadosCheck) afiliadosCheck.checked = usaAfiliados;
+          }
+
           if (data.imposto !== undefined) {
             document.getElementById('szImposto').value = data.imposto;
           }
@@ -1185,8 +1249,8 @@
       }
 
       function getCustomerPrice(price) {
-        const discountPct = num('szDesconto') / 100;
-        const coupon = num('szCupom');
+        const discountPct = usaDesconto ? num('szDesconto') / 100 : 0;
+        const coupon = usaCupom ? num('szCupom') : 0;
 
         let customerPrice = price;
 
@@ -1222,8 +1286,9 @@
 
         const tax = customerPrice * taxPct;
         const ads = usaAds && roas > 0 ? customerPrice / roas : 0;
+        const affiliates = usaAfiliados ? customerPrice * (num('szAfiliados') / 100) : 0;
 
-        const fixedCostsNoAds = cost + packaging + operational + tax;
+        const fixedCostsNoAds = cost + packaging + operational + tax + affiliates;
         const totalCosts = fixedCostsNoAds + ads;
         const profit = wallet - totalCosts;
         const margin = price > 0 ? (profit / price) * 100 : 0;
@@ -1237,6 +1302,7 @@
           accelera,
           tax,
           ads,
+          affiliates,
           discountTotal,
           totalCosts,
           profit,
@@ -1277,6 +1343,9 @@
         const cpfExtra = document.getElementById('szCpfExtra');
         const adsOptions = document.getElementById('szAdsOptions');
         const aceleraOptions = document.getElementById('szAceleraOptions');
+        const descontoOptions = document.getElementById('szDescontoOptions');
+        const cupomOptions = document.getElementById('szCupomOptions');
+        const afiliadosOptions = document.getElementById('szAfiliadosOptions');
 
         if (cpfExtra) {
           cpfExtra.style.display = sellerDoc === 'cpf' ? 'block' : 'none';
@@ -1288,6 +1357,18 @@
 
         if (aceleraOptions) {
           aceleraOptions.style.display = usaAcelera ? 'block' : 'none';
+        }
+
+        if (descontoOptions) {
+          descontoOptions.style.display = usaDesconto ? 'block' : 'none';
+        }
+
+        if (cupomOptions) {
+          cupomOptions.style.display = usaCupom ? 'block' : 'none';
+        }
+
+        if (afiliadosOptions) {
+          afiliadosOptions.style.display = usaAfiliados ? 'block' : 'none';
         }
       }
 
@@ -1343,12 +1424,13 @@
         text('szImpostoValor', money(result.tax));
         text('szAds', money(result.ads));
         text('szDescontoTotal', money(result.discountTotal));
+        text('szAfiliadosValor', money(result.affiliates));
         text('szCustosTotais', money(result.totalCosts));
         text('szMargem', result.margin.toFixed(2).replace('.', ',') + '%');
 
         text(
           'szRegraComissao',
-          result.commissionRule + '. Preço mínimo considera lucro igual ou maior que zero. CPA máximo considera o maior investimento por venda antes de zerar o lucro. Shopee Ads ' + (usaAds ? 'ativado' : 'desativado') + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '. Cadastro: ' + (sellerDoc === 'cpf' ? 'CPF' : 'CNPJ') + '.'
+          result.commissionRule + '. Preço mínimo considera lucro igual ou maior que zero. Limite de investimento em Ads considera o maior valor que você pode investir por venda antes de zerar o lucro. Shopee Ads ' + (usaAds ? 'ativado' : 'desativado') + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '. Cadastro: ' + (sellerDoc === 'cpf' ? 'CPF' : 'CNPJ') + '.'
         );
       }
 
@@ -1374,6 +1456,9 @@
         usaAcelera = keepUsaAcelera;
         mode = 'margem';
         couponType = 'percent';
+        usaDesconto = false;
+        usaCupom = false;
+        usaAfiliados = false;
 
         document.getElementById('szImposto').value = keepImposto;
         document.getElementById('szRoas').value = keepRoas;
@@ -1386,6 +1471,15 @@
 
         const aceleraCheck = document.getElementById('szUsaAcelera');
         if (aceleraCheck) aceleraCheck.checked = usaAcelera;
+
+        const descontoCheck = document.getElementById('szUsaDesconto');
+        if (descontoCheck) descontoCheck.checked = usaDesconto;
+
+        const cupomCheck = document.getElementById('szUsaCupom');
+        if (cupomCheck) cupomCheck.checked = usaCupom;
+
+        const afiliadosCheck = document.getElementById('szUsaAfiliados');
+        if (afiliadosCheck) afiliadosCheck.checked = usaAfiliados;
 
         root.querySelectorAll('.sz-toggle').forEach(group => {
           const buttons = group.querySelectorAll('button');
@@ -1468,6 +1562,36 @@
       if (aceleraCheck) {
         aceleraCheck.addEventListener('change', function() {
           usaAcelera = this.checked;
+          saveFixedConfig();
+          updateConditionalFields();
+          calculate();
+        });
+      }
+
+      const descontoCheck = document.getElementById('szUsaDesconto');
+      if (descontoCheck) {
+        descontoCheck.addEventListener('change', function() {
+          usaDesconto = this.checked;
+          saveFixedConfig();
+          updateConditionalFields();
+          calculate();
+        });
+      }
+
+      const cupomCheck = document.getElementById('szUsaCupom');
+      if (cupomCheck) {
+        cupomCheck.addEventListener('change', function() {
+          usaCupom = this.checked;
+          saveFixedConfig();
+          updateConditionalFields();
+          calculate();
+        });
+      }
+
+      const afiliadosCheck = document.getElementById('szUsaAfiliados');
+      if (afiliadosCheck) {
+        afiliadosCheck.addEventListener('change', function() {
+          usaAfiliados = this.checked;
           saveFixedConfig();
           updateConditionalFields();
           calculate();
