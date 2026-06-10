@@ -71,22 +71,51 @@ export default async function handler(req, res) {
       to: cleanEmail,
       subject: "🔐 Seu acesso à Calculadora Shopee MargemUp",
       html: `
-        <div style="font-family:Arial;padding:40px;text-align:center;background:#0E1116;color:#fff;">
-          <div style="max-width:520px;margin:0 auto;background:#111722;border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:34px;">
-            <h1 style="margin:0 0 12px;font-size:28px;">Acesse sua calculadora 🚀</h1>
+        <div style="font-family:Arial,Helvetica,sans-serif;padding:40px;background:#0E1116;color:#fff;">
+          <div style="max-width:560px;margin:0 auto;background:#111722;border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:36px;">
 
-            <p style="color:#a1a1aa;line-height:1.6;">
-              Clique no botão abaixo para entrar na sua área MargemUp.
+            <div style="text-align:center;">
+              <div style="display:inline-block;background:#EE4D2D;color:#fff;width:56px;height:56px;line-height:56px;border-radius:16px;font-size:24px;font-weight:bold;">
+                M
+              </div>
+            </div>
+
+            <h1 style="margin:24px 0 12px;text-align:center;font-size:28px;">
+              Seu acesso está pronto 🚀
+            </h1>
+
+            <p style="color:#a1a1aa;line-height:1.7;text-align:center;">
+              Clique no botão abaixo para acessar sua
+              <strong style="color:#fff;">Calculadora Shopee MargemUp</strong>.
             </p>
 
-            <a href="${magicLink}"
-              style="display:inline-block;margin-top:22px;background:#EE4D2D;color:#fff;padding:15px 24px;border-radius:14px;text-decoration:none;font-weight:bold;">
-              Acessar calculadora
-            </a>
+            <div style="text-align:center;">
+              <a href="${magicLink}"
+                style="
+                  display:inline-block;
+                  margin-top:24px;
+                  background:#EE4D2D;
+                  color:#fff;
+                  padding:16px 28px;
+                  border-radius:14px;
+                  text-decoration:none;
+                  font-weight:bold;
+                  font-size:16px;
+                ">
+                Acessar calculadora
+              </a>
+            </div>
 
-            <p style="margin-top:28px;color:#71717a;font-size:13px;">
-              Este link é pessoal e faz login automático.
+            <p style="margin-top:32px;color:#71717a;font-size:13px;text-align:center;">
+              Este link é pessoal e faz login automático na sua conta.
             </p>
+
+            <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:28px 0;">
+
+            <p style="color:#71717a;font-size:12px;text-align:center;">
+              © MargemUp • Precificação Inteligente para Marketplaces
+            </p>
+
           </div>
         </div>
       `
