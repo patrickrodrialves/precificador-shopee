@@ -67,9 +67,9 @@ export default async function handler(req, res) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      from: "MargemUp <onboarding@resend.dev>",
+      from: "Acesso MargemUp <acesso@margemup.com.br>",
       to: cleanEmail,
-      subject: "Seu link de acesso à MargemUp 🔐",
+      subject: "🔐 Seu acesso à Calculadora Shopee MargemUp",
       html: `
         <div style="font-family:Arial;padding:40px;text-align:center;background:#0E1116;color:#fff;">
           <div style="max-width:520px;margin:0 auto;background:#111722;border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:34px;">
