@@ -129,8 +129,16 @@
               <small class="sz-save-note">valor salvo automaticamente</small>
             </div>
 
-            <div>
-              <label>ROAS desejado</label>
+            <div class="sz-full">
+              <label class="sz-check-row sz-check-main">
+                <input id="szUsaAds" type="checkbox">
+                <span class="sz-custom-check"></span>
+                <span>Vou fazer Shopee Ads nesse produto</span>
+              </label>
+            </div>
+
+            <div class="sz-full sz-ads-options" id="szAdsOptions" style="display:none;">
+              <label>ROAS alvo</label>
               <input id="szRoas" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex: 3">
               <small class="sz-save-note">valor salvo automaticamente</small>
             </div>
@@ -997,6 +1005,7 @@
       let cpfOver450 = false;
       let mode = 'margem';
       let couponType = 'percent';
+      let usaAds = false;
       let usaAcelera = false;
 
       const STORAGE_KEY = 'sz_precificador_config';
@@ -1072,6 +1081,7 @@
           sellerRate,
           sellerDoc,
           cpfOver450,
+          usaAds,
           usaAcelera,
           imposto: document.getElementById('szImposto').value,
           roas: document.getElementById('szRoas').value
@@ -1109,6 +1119,12 @@
             cpfOver450 = data.cpfOver450 === true;
             const cpfCheck = document.getElementById('szCpf450');
             if (cpfCheck) cpfCheck.checked = cpfOver450;
+          }
+
+          if (data.usaAds !== undefined) {
+            usaAds = data.usaAds === true;
+            const adsCheck = document.getElementById('szUsaAds');
+            if (adsCheck) adsCheck.checked = usaAds;
           }
 
           if (data.usaAcelera !== undefined) {
@@ -1190,7 +1206,7 @@
         const wallet = afterCommission - accelera;
 
         const tax = customerPrice * taxPct;
-        const ads = roas > 0 ? customerPrice / roas : 0;
+        const ads = usaAds && roas > 0 ? customerPrice / roas : 0;
 
         const totalCosts = cost + packaging + operational + tax + ads;
         const profit = wallet - totalCosts;
@@ -1229,10 +1245,15 @@
 
       function updateConditionalFields() {
         const cpfExtra = document.getElementById('szCpfExtra');
+        const adsOptions = document.getElementById('szAdsOptions');
         const aceleraOptions = document.getElementById('szAceleraOptions');
 
         if (cpfExtra) {
           cpfExtra.style.display = sellerDoc === 'cpf' ? 'block' : 'none';
+        }
+
+        if (adsOptions) {
+          adsOptions.style.display = usaAds ? 'block' : 'none';
         }
 
         if (aceleraOptions) {
@@ -1291,7 +1312,7 @@
 
         text(
           'szRegraComissao',
-          result.commissionRule + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '. Cadastro: ' + (sellerDoc === 'cpf' ? 'CPF' : 'CNPJ') + '.'
+          result.commissionRule + '. Shopee Ads ' + (usaAds ? 'ativado' : 'desativado') + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '. Cadastro: ' + (sellerDoc === 'cpf' ? 'CPF' : 'CNPJ') + '.'
         );
       }
 
@@ -1301,6 +1322,7 @@
         const keepSellerRate = sellerRate;
         const keepSellerDoc = sellerDoc;
         const keepCpfOver450 = cpfOver450;
+        const keepUsaAds = usaAds;
         const keepUsaAcelera = usaAcelera;
 
         root.querySelectorAll('input').forEach(input => {
@@ -1312,6 +1334,7 @@
         sellerRate = keepSellerRate;
         sellerDoc = keepSellerDoc;
         cpfOver450 = keepCpfOver450;
+        usaAds = keepUsaAds;
         usaAcelera = keepUsaAcelera;
         mode = 'margem';
         couponType = 'percent';
@@ -1321,6 +1344,9 @@
 
         const cpfCheck = document.getElementById('szCpf450');
         if (cpfCheck) cpfCheck.checked = cpfOver450;
+
+        const adsCheck = document.getElementById('szUsaAds');
+        if (adsCheck) adsCheck.checked = usaAds;
 
         const aceleraCheck = document.getElementById('szUsaAcelera');
         if (aceleraCheck) aceleraCheck.checked = usaAcelera;
@@ -1388,6 +1414,16 @@
         cpf450Check.addEventListener('change', function() {
           cpfOver450 = this.checked;
           saveFixedConfig();
+          calculate();
+        });
+      }
+
+      const adsCheck = document.getElementById('szUsaAds');
+      if (adsCheck) {
+        adsCheck.addEventListener('change', function() {
+          usaAds = this.checked;
+          saveFixedConfig();
+          updateConditionalFields();
           calculate();
         });
       }
