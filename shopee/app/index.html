@@ -35,17 +35,31 @@
       <div class="sz-left">
 
         <div class="sz-block">
-          <h4>Tipo de Vendedor</h4>
-          <div class="sz-toggle" data-group="seller">
-            <button type="button" class="active" data-value="3.5">Não Indicado</button>
-            <button type="button" data-value="2.5">Vendedor Indicado</button>
-            <button type="button" data-value="1">Loja Oficial</button>
+          <h4>Tipo de vendedor</h4>
+
+          <div class="sz-toggle" data-group="documento">
+            <button type="button" data-doc="cpf">Pessoa Física (CPF)</button>
+            <button type="button" class="active" data-doc="cnpj">Pessoa Jurídica (CNPJ)</button>
+          </div>
+
+          <div class="sz-extra-box" id="szCpfExtra" style="display:none;">
+            <label class="sz-check-row">
+              <input id="szCpf450" type="checkbox">
+              <span class="sz-custom-check"></span>
+              <span>Ultrapassei 450 pedidos nos últimos 90 dias</span>
+              <span class="sz-info" title="Para vendedores que operam na modalidade CPF e ultrapassam 450 pedidos em um período de 90 dias, além do valor da comissão é aplicada uma taxa adicional de R$3 por item vendido.">i</span>
+            </label>
+            <small class="sz-info-text">
+              Para vendedores que operam na modalidade CPF e ultrapassam 450 pedidos em um período de 90 dias, além do valor da comissão é aplicada uma taxa adicional de R$3 por item vendido.
+            </small>
           </div>
         </div>
 
         <div class="sz-block">
           <h4>Custos do Produto</h4>
-          <div class="sz-grid-2">
+          <small class="sz-block-note">Informe os custos por unidade vendida.</small>
+
+          <div class="sz-grid-3">
             <div>
               <label>Custo do Produto</label>
               <input id="szCusto" type="text" inputmode="numeric" autocomplete="off" placeholder="Ex: R$ 20,91">
@@ -54,6 +68,11 @@
             <div>
               <label>Custo da Embalagem</label>
               <input id="szEmbalagem" type="text" inputmode="numeric" autocomplete="off" placeholder="Ex: R$ 0,50">
+            </div>
+
+            <div>
+              <label>Custo Operacional</label>
+              <input id="szOperacional" type="text" inputmode="numeric" autocomplete="off" placeholder="Ex: R$ 2,00">
             </div>
           </div>
         </div>
@@ -117,10 +136,19 @@
             </div>
 
             <div class="sz-full">
-              <label>Usa Shopee Acelera?</label>
-              <div class="sz-toggle" data-group="acelera">
-                <button type="button" class="active" data-acelera="sim">Sim</button>
-                <button type="button" data-acelera="nao">Não</button>
+              <label class="sz-check-row sz-check-main">
+                <input id="szUsaAcelera" type="checkbox">
+                <span class="sz-custom-check"></span>
+                <span>Utilizo Shopee Acelera</span>
+              </label>
+            </div>
+
+            <div class="sz-full sz-acelera-options" id="szAceleraOptions" style="display:none;">
+              <label>Tipo Shopee Acelera</label>
+              <div class="sz-toggle" data-group="seller">
+                <button type="button" data-value="3.5">Não Indicado</button>
+                <button type="button" class="active" data-value="2.5">Vendedor Indicado</button>
+                <button type="button" data-value="1">Loja Oficial</button>
               </div>
             </div>
           </div>
@@ -467,6 +495,113 @@
     font-weight: 650;
   }
 
+  #szPrecificador .sz-block-note {
+    display: block;
+    margin: -6px 0 14px;
+    color: #71717a;
+    font-size: 12px;
+    line-height: 1.35;
+    font-weight: 650;
+  }
+
+  #szPrecificador .sz-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  #szPrecificador .sz-extra-box {
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 18px;
+    border: 1px solid rgba(238,77,45,.18);
+    background: rgba(238,77,45,.07);
+  }
+
+  #szPrecificador .sz-check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    cursor: pointer;
+    color: #d4d4d8;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
+  #szPrecificador .sz-check-row input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  #szPrecificador .sz-custom-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 7px;
+    border: 1px solid var(--mz-border-strong);
+    background: rgba(255,255,255,.055);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    transition: .2s ease;
+  }
+
+  #szPrecificador .sz-check-row input:checked + .sz-custom-check {
+    border-color: rgba(238,77,45,.75);
+    background: linear-gradient(135deg, var(--mz-orange), var(--mz-orange-2));
+    box-shadow: 0 10px 25px rgba(238,77,45,.22);
+  }
+
+  #szPrecificador .sz-check-row input:checked + .sz-custom-check::after {
+    content: "✓";
+    color: #fff;
+    font-size: 13px;
+    font-weight: 950;
+  }
+
+  #szPrecificador .sz-info {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.08);
+    border: 1px solid var(--mz-border);
+    color: #ffb199;
+    font-size: 12px;
+    font-weight: 950;
+    margin-left: auto;
+    flex: 0 0 auto;
+  }
+
+  #szPrecificador .sz-info-text {
+    display: block;
+    margin-top: 9px;
+    color: #a1a1aa;
+    font-size: 11.5px;
+    line-height: 1.45;
+  }
+
+  #szPrecificador .sz-check-main {
+    min-height: 50px;
+    padding: 0 14px;
+    border-radius: 17px;
+    border: 1px solid var(--mz-border);
+    background: rgba(255,255,255,.045);
+  }
+
+  #szPrecificador .sz-acelera-options {
+    padding: 14px;
+    border-radius: 18px;
+    border: 1px solid rgba(34,197,94,.18);
+    background: rgba(34,197,94,.06);
+  }
+
   #szPrecificador .sz-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -743,7 +878,7 @@
       max-width: 100%;
     }
 
-    #szPrecificador .sz-grid-2 { grid-template-columns: 1fr; }
+    #szPrecificador .sz-grid-2, #szPrecificador .sz-grid-3 { grid-template-columns: 1fr; }
 
     #szPrecificador .sz-toggle {
       display: grid;
@@ -857,10 +992,12 @@
     function iniciarCalculadoraShopee() {
       const root = document.getElementById('szPrecificador');
 
-      let sellerRate = 3.5;
+      let sellerRate = 2.5;
+      let sellerDoc = 'cnpj';
+      let cpfOver450 = false;
       let mode = 'margem';
       let couponType = 'percent';
-      let usaAcelera = true;
+      let usaAcelera = false;
 
       const STORAGE_KEY = 'sz_precificador_config';
 
@@ -910,6 +1047,7 @@
       function isMoneyInput(input) {
         if (input.id === 'szCusto') return true;
         if (input.id === 'szEmbalagem') return true;
+        if (input.id === 'szOperacional') return true;
         if (input.id === 'szValorBase' && (mode === 'lucro' || mode === 'preco')) return true;
         if (input.id === 'szCupom' && couponType === 'real') return true;
         return false;
@@ -932,6 +1070,9 @@
       function saveFixedConfig() {
         const data = {
           sellerRate,
+          sellerDoc,
+          cpfOver450,
+          usaAcelera,
           imposto: document.getElementById('szImposto').value,
           roas: document.getElementById('szRoas').value
         };
@@ -955,6 +1096,27 @@
             });
           }
 
+          if (data.sellerDoc) {
+            sellerDoc = data.sellerDoc;
+
+            const docButtons = root.querySelectorAll('[data-group="documento"] button');
+            docButtons.forEach(button => {
+              button.classList.toggle('active', button.dataset.doc === sellerDoc);
+            });
+          }
+
+          if (data.cpfOver450 !== undefined) {
+            cpfOver450 = data.cpfOver450 === true;
+            const cpfCheck = document.getElementById('szCpf450');
+            if (cpfCheck) cpfCheck.checked = cpfOver450;
+          }
+
+          if (data.usaAcelera !== undefined) {
+            usaAcelera = data.usaAcelera === true;
+            const aceleraCheck = document.getElementById('szUsaAcelera');
+            if (aceleraCheck) aceleraCheck.checked = usaAcelera;
+          }
+
           if (data.imposto !== undefined) {
             document.getElementById('szImposto').value = data.imposto;
           }
@@ -966,10 +1128,29 @@
       }
 
       function getCommission(price) {
-        if (price <= 79.99) return { value: price * 0.20 + 4, rule: 'Regra aplicada: 20% + R$ 4,00' };
-        if (price <= 99.99) return { value: price * 0.14 + 16, rule: 'Regra aplicada: 14% + R$ 16,00' };
-        if (price <= 199.99) return { value: price * 0.14 + 20, rule: 'Regra aplicada: 14% + R$ 20,00' };
-        return { value: price * 0.14 + 26, rule: 'Regra aplicada: 14% + R$ 26,00' };
+        let baseValue = 0;
+        let rule = '';
+
+        if (price <= 79.99) {
+          baseValue = price * 0.20 + 4;
+          rule = 'Regra aplicada: 20% + R$ 4,00';
+        } else if (price <= 99.99) {
+          baseValue = price * 0.14 + 16;
+          rule = 'Regra aplicada: 14% + R$ 16,00';
+        } else if (price <= 199.99) {
+          baseValue = price * 0.14 + 20;
+          rule = 'Regra aplicada: 14% + R$ 20,00';
+        } else {
+          baseValue = price * 0.14 + 26;
+          rule = 'Regra aplicada: 14% + R$ 26,00';
+        }
+
+        if (sellerDoc === 'cpf' && cpfOver450) {
+          baseValue += 3;
+          rule += ' + R$ 3,00 de taxa vendedor CPF';
+        }
+
+        return { value: baseValue, rule };
       }
 
       function getCustomerPrice(price) {
@@ -994,6 +1175,7 @@
       function simulate(price) {
         const cost = num('szCusto');
         const packaging = num('szEmbalagem');
+        const operational = num('szOperacional');
         const taxPct = num('szImposto') / 100;
         const roas = num('szRoas');
 
@@ -1010,7 +1192,7 @@
         const tax = customerPrice * taxPct;
         const ads = roas > 0 ? customerPrice / roas : 0;
 
-        const totalCosts = cost + packaging + tax + ads;
+        const totalCosts = cost + packaging + operational + tax + ads;
         const profit = wallet - totalCosts;
         const margin = price > 0 ? (profit / price) * 100 : 0;
 
@@ -1043,6 +1225,19 @@
         }
 
         return null;
+      }
+
+      function updateConditionalFields() {
+        const cpfExtra = document.getElementById('szCpfExtra');
+        const aceleraOptions = document.getElementById('szAceleraOptions');
+
+        if (cpfExtra) {
+          cpfExtra.style.display = sellerDoc === 'cpf' ? 'block' : 'none';
+        }
+
+        if (aceleraOptions) {
+          aceleraOptions.style.display = usaAcelera ? 'block' : 'none';
+        }
       }
 
       function updateLabels() {
@@ -1096,7 +1291,7 @@
 
         text(
           'szRegraComissao',
-          result.commissionRule + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '.'
+          result.commissionRule + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '. Cadastro: ' + (sellerDoc === 'cpf' ? 'CPF' : 'CNPJ') + '.'
         );
       }
 
@@ -1104,20 +1299,31 @@
         const keepImposto = document.getElementById('szImposto').value;
         const keepRoas = document.getElementById('szRoas').value;
         const keepSellerRate = sellerRate;
+        const keepSellerDoc = sellerDoc;
+        const keepCpfOver450 = cpfOver450;
+        const keepUsaAcelera = usaAcelera;
 
         root.querySelectorAll('input').forEach(input => {
-          if (input.id !== 'szImposto' && input.id !== 'szRoas') {
+          if (input.id !== 'szImposto' && input.id !== 'szRoas' && input.type !== 'checkbox') {
             input.value = '';
           }
         });
 
         sellerRate = keepSellerRate;
+        sellerDoc = keepSellerDoc;
+        cpfOver450 = keepCpfOver450;
+        usaAcelera = keepUsaAcelera;
         mode = 'margem';
         couponType = 'percent';
-        usaAcelera = true;
 
         document.getElementById('szImposto').value = keepImposto;
         document.getElementById('szRoas').value = keepRoas;
+
+        const cpfCheck = document.getElementById('szCpf450');
+        if (cpfCheck) cpfCheck.checked = cpfOver450;
+
+        const aceleraCheck = document.getElementById('szUsaAcelera');
+        if (aceleraCheck) aceleraCheck.checked = usaAcelera;
 
         root.querySelectorAll('.sz-toggle').forEach(group => {
           const buttons = group.querySelectorAll('button');
@@ -1126,6 +1332,10 @@
           if (group.dataset.group === 'seller') {
             buttons.forEach(button => {
               if (parseFloat(button.dataset.value) === sellerRate) button.classList.add('active');
+            });
+          } else if (group.dataset.group === 'documento') {
+            buttons.forEach(button => {
+              if (button.dataset.doc === sellerDoc) button.classList.add('active');
             });
           } else {
             if (buttons[0]) buttons[0].classList.add('active');
@@ -1136,6 +1346,7 @@
         if (marketing) marketing.classList.remove('open');
 
         saveFixedConfig();
+        updateConditionalFields();
         updateLabels();
         calculate();
       }
@@ -1152,15 +1363,44 @@
             saveFixedConfig();
           }
 
+          if (this.dataset.doc) {
+            sellerDoc = this.dataset.doc;
+            if (sellerDoc !== 'cpf') {
+              cpfOver450 = false;
+              const cpfCheck = document.getElementById('szCpf450');
+              if (cpfCheck) cpfCheck.checked = false;
+            }
+            saveFixedConfig();
+          }
+
           if (this.dataset.mode) mode = this.dataset.mode;
           if (this.dataset.coupon) couponType = this.dataset.coupon;
-          if (this.dataset.acelera) usaAcelera = this.dataset.acelera === 'sim';
 
+          updateConditionalFields();
           updateLabels();
           refreshInputMasks();
           calculate();
         });
       });
+
+      const cpf450Check = document.getElementById('szCpf450');
+      if (cpf450Check) {
+        cpf450Check.addEventListener('change', function() {
+          cpfOver450 = this.checked;
+          saveFixedConfig();
+          calculate();
+        });
+      }
+
+      const aceleraCheck = document.getElementById('szUsaAcelera');
+      if (aceleraCheck) {
+        aceleraCheck.addEventListener('change', function() {
+          usaAcelera = this.checked;
+          saveFixedConfig();
+          updateConditionalFields();
+          calculate();
+        });
+      }
 
       document.getElementById('szMarketingToggle').addEventListener('click', function() {
         document.getElementById('szMarketingContent').classList.toggle('open');
@@ -1186,6 +1426,7 @@
       });
 
       loadFixedConfig();
+      updateConditionalFields();
       updateLabels();
       refreshInputMasks();
       calculate();
