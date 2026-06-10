@@ -1359,45 +1359,42 @@
       }
 
       function updateConditionalFields() {
-        const cpfExtra = document.getElementById('szCpfExtra');
-        const adsOptions = document.getElementById('szAdsOptions');
-        const aceleraOptions = document.getElementById('szAceleraOptions');
-        const descontoOptions = document.getElementById('szDescontoOptions');
-        const cupomOptions = document.getElementById('szCupomOptions');
-        const afiliadosOptions = document.getElementById('szAfiliadosOptions');
-        const cpfExtra = document.getElementById('szCpfExtra');
-        const adsOptions = document.getElementById('szAdsOptions');
-        const aceleraOptions = document.getElementById('szAceleraOptions');
-        const impostoBox = document.getElementById('szImpostoBox');
+  const cpfExtra = document.getElementById('szCpfExtra');
+  const adsOptions = document.getElementById('szAdsOptions');
+  const aceleraOptions = document.getElementById('szAceleraOptions');
+  const descontoOptions = document.getElementById('szDescontoOptions');
+  const cupomOptions = document.getElementById('szCupomOptions');
+  const afiliadosOptions = document.getElementById('szAfiliadosOptions');
+  const impostoBox = document.getElementById('szImpostoBox');
 
-        if (cpfExtra) {
-          cpfExtra.style.display = sellerDoc === 'cpf' ? 'block' : 'none';
-        }
+  if (cpfExtra) {
+    cpfExtra.style.display = sellerDoc === 'cpf' ? 'block' : 'none';
+  }
 
-        if (adsOptions) {
-          adsOptions.style.display = usaAds ? 'block' : 'none';
-        }
+  if (adsOptions) {
+    adsOptions.style.display = usaAds ? 'block' : 'none';
+  }
 
-        if (aceleraOptions) {
-          aceleraOptions.style.display = usaAcelera ? 'block' : 'none';
-        }
+  if (aceleraOptions) {
+    aceleraOptions.style.display = usaAcelera ? 'block' : 'none';
+  }
 
-        if (descontoOptions) {
-          descontoOptions.style.display = usaDesconto ? 'block' : 'none';
-        }
+  if (descontoOptions) {
+    descontoOptions.style.display = usaDesconto ? 'block' : 'none';
+  }
 
-        if (cupomOptions) {
-          cupomOptions.style.display = usaCupom ? 'block' : 'none';
-        }
+  if (cupomOptions) {
+    cupomOptions.style.display = usaCupom ? 'block' : 'none';
+  }
 
-        if (afiliadosOptions) {
-          afiliadosOptions.style.display = usaAfiliados ? 'block' : 'none';
+  if (afiliadosOptions) {
+    afiliadosOptions.style.display = usaAfiliados ? 'block' : 'none';
+  }
 
-          if (impostoBox) {
-  impostoBox.style.display = sellerDoc === 'cpf' ? 'none' : 'block';
+  if (impostoBox) {
+    impostoBox.style.display = sellerDoc === 'cpf' ? 'none' : 'block';
+  }
 }
-        }
-      }
 
       function updateLabels() {
         const baseInput = document.getElementById('szValorBase');
