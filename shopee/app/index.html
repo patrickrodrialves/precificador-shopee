@@ -213,6 +213,16 @@
               <small>Cliente paga</small>
               <strong id="szPrecoCliente">R$ 0,00</strong>
             </div>
+
+            <div>
+              <small>Preço mínimo</small>
+              <strong id="szPrecoMinimo">R$ 0,00</strong>
+            </div>
+
+            <div>
+              <small>CPA máximo</small>
+              <strong id="szCpaMaximo">R$ 0,00</strong>
+            </div>
           </div>
         </div>
 
@@ -775,8 +785,13 @@
     font-size: 21px;
   }
 
-  #szPrecificador #szLucro {
+  #szPrecificador #szLucro,
+  #szPrecificador #szCpaMaximo {
     color: var(--mz-green);
+  }
+
+  #szPrecificador #szPrecoMinimo {
+    color: #ffb199;
   }
 
   #szPrecificador .sz-detail-card {
@@ -1208,9 +1223,11 @@
         const tax = customerPrice * taxPct;
         const ads = usaAds && roas > 0 ? customerPrice / roas : 0;
 
-        const totalCosts = cost + packaging + operational + tax + ads;
+        const fixedCostsNoAds = cost + packaging + operational + tax;
+        const totalCosts = fixedCostsNoAds + ads;
         const profit = wallet - totalCosts;
         const margin = price > 0 ? (profit / price) * 100 : 0;
+        const cpaMax = Math.max(wallet - fixedCostsNoAds, 0);
 
         return {
           price,
@@ -1223,7 +1240,8 @@
           discountTotal,
           totalCosts,
           profit,
-          margin
+          margin,
+          cpaMax
         };
       }
 
@@ -1238,6 +1256,18 @@
 
           if (mode === 'margem' && result.margin >= base) return result;
           if (mode === 'lucro' && result.profit >= base) return result;
+        }
+
+        return null;
+      }
+
+      function findMinimumPrice() {
+        for (let price = 10; price <= 3000; price += 0.10) {
+          const result = simulate(price);
+
+          if (result.profit >= 0) {
+            return result;
+          }
         }
 
         return null;
@@ -1291,10 +1321,14 @@
       function calculate() {
         const result = findIdealPrice();
 
+        const minimumResult = findMinimumPrice();
+
         if (!result) {
           text('szPrecoFinal', '—');
           text('szLucro', '—');
           text('szPrecoCliente', '—');
+          text('szPrecoMinimo', minimumResult ? money(minimumResult.price) : '—');
+          text('szCpaMaximo', '—');
           text('szRegraComissao', 'Não foi possível encontrar um preço dentro do limite testado.');
           return;
         }
@@ -1302,6 +1336,8 @@
         text('szPrecoFinal', money(result.price));
         text('szLucro', money(result.profit));
         text('szPrecoCliente', money(result.customerPrice));
+        text('szPrecoMinimo', minimumResult ? money(minimumResult.price) : '—');
+        text('szCpaMaximo', money(result.cpaMax));
         text('szComissao', money(result.commission));
         text('szAcelera', money(result.accelera));
         text('szImpostoValor', money(result.tax));
@@ -1312,7 +1348,7 @@
 
         text(
           'szRegraComissao',
-          result.commissionRule + '. Shopee Ads ' + (usaAds ? 'ativado' : 'desativado') + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '. Cadastro: ' + (sellerDoc === 'cpf' ? 'CPF' : 'CNPJ') + '.'
+          result.commissionRule + '. Preço mínimo considera lucro igual ou maior que zero. CPA máximo considera o maior investimento por venda antes de zerar o lucro. Shopee Ads ' + (usaAds ? 'ativado' : 'desativado') + '. Shopee Acelera ' + (usaAcelera ? 'ativado' : 'desativado') + '. Cadastro: ' + (sellerDoc === 'cpf' ? 'CPF' : 'CNPJ') + '.'
         );
       }
 
