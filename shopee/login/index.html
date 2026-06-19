@@ -22,18 +22,33 @@
 
       <div class="mu-badge">Acesso protegido</div>
 
-      <h1>Acesse sua calculadora</h1>
-      <p class="mu-subtitle">
-        Digite o e-mail usado na compra para receber seu link seguro de acesso.
+      <h1 id="title">Acesse sua calculadora</h1>
+      <p class="mu-subtitle" id="subtitle">
+        Digite o e-mail usado na compra para receber seu código de acesso.
       </p>
 
       <div class="mu-form">
-        <label for="email">E-mail da compra</label>
-        <input id="email" type="email" placeholder="seu@email.com" />
+        <div id="emailStep">
+          <label for="email">E-mail da compra</label>
+          <input id="email" type="email" placeholder="seu@email.com" />
 
-        <button id="loginBtn" type="button">
-          Receber link de acesso
-        </button>
+          <button id="sendCodeBtn" type="button">
+            Receber código de acesso
+          </button>
+        </div>
+
+        <div id="codeStep" style="display:none;">
+          <label for="code">Código de acesso</label>
+          <input id="code" type="text" inputmode="numeric" maxlength="6" placeholder="000000" class="mu-code-input" />
+
+          <button id="verifyCodeBtn" type="button">
+            Entrar na calculadora
+          </button>
+
+          <button id="backBtn" type="button" class="mu-secondary-btn">
+            Alterar e-mail
+          </button>
+        </div>
 
         <p id="msg"></p>
       </div>
@@ -44,78 +59,122 @@
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
-    const supabaseClient = window.supabase.createClient(
-      "https://qdccvgsubngerbydekpi.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkY2N2Z3N1Ym5nZXJieWRla3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzQ3MTQsImV4cCI6MjA5MzExMDcxNH0.hvQ-_20waDJ57gi4j1UtNmmI5_UPsSs49-X5rBHYrno",
-      {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true
-        }
-      }
-    );
+    let currentEmail = "";
 
-    document.getElementById("loginBtn").addEventListener("click", async function () {
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const msg = document.getElementById("msg");
-      const btn = document.getElementById("loginBtn");
+    const emailStep = document.getElementById("emailStep");
+    const codeStep = document.getElementById("codeStep");
+    const emailInput = document.getElementById("email");
+    const codeInput = document.getElementById("code");
+    const msg = document.getElementById("msg");
+    const title = document.getElementById("title");
+    const subtitle = document.getElementById("subtitle");
+
+    const sendCodeBtn = document.getElementById("sendCodeBtn");
+    const verifyCodeBtn = document.getElementById("verifyCodeBtn");
+    const backBtn = document.getElementById("backBtn");
+
+    function showEmailStep() {
+      codeStep.style.display = "none";
+      emailStep.style.display = "block";
+      title.innerText = "Acesse sua calculadora";
+      subtitle.innerText = "Digite o e-mail usado na compra para receber seu código de acesso.";
+      msg.innerText = "";
+      sendCodeBtn.innerText = "Receber código de acesso";
+      sendCodeBtn.disabled = false;
+    }
+
+    function showCodeStep() {
+      emailStep.style.display = "none";
+      codeStep.style.display = "block";
+      title.innerText = "Digite o código";
+      subtitle.innerText = `Enviamos um código de 6 dígitos para ${currentEmail}.`;
+      msg.innerText = "Abra seu e-mail no celular ou computador e digite o código aqui.";
+      verifyCodeBtn.innerText = "Entrar na calculadora";
+      verifyCodeBtn.disabled = false;
+      setTimeout(() => codeInput.focus(), 100);
+    }
+
+    sendCodeBtn.addEventListener("click", async function () {
+      const email = emailInput.value.trim().toLowerCase();
 
       if (!email) {
         msg.innerText = "Digite um e-mail.";
         return;
       }
 
+      currentEmail = email;
       msg.innerText = "";
-      btn.innerText = "Verificando...";
-      btn.disabled = true;
+      sendCodeBtn.innerText = "Enviando código...";
+      sendCodeBtn.disabled = true;
 
-      const { data: allowedUsers, error: allowedError } = await supabaseClient
-        .from("allowed_users")
-        .select("email, active")
-        .ilike("email", email)
-        .limit(1);
+      const response = await fetch("/api/enviar-codigo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: currentEmail
+        })
+      });
 
-      if (
-        allowedError ||
-        !allowedUsers ||
-        allowedUsers.length === 0 ||
-        allowedUsers[0].active !== true
-      ) {
-        msg.innerText = "Esse e-mail ainda não possui acesso liberado.";
-        btn.innerText = "Receber link de acesso";
-        btn.disabled = false;
+      const result = await response.json();
+
+      if (!response.ok) {
+        msg.innerText = result.error || "Erro ao enviar código.";
+        sendCodeBtn.innerText = "Receber código de acesso";
+        sendCodeBtn.disabled = false;
         return;
       }
 
-      btn.innerText = "Enviando...";
-
-      const response = await fetch("/api/reenviar-acesso", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    email: email
-  })
-});
-
-const result = await response.json();
-
-if (!response.ok) {
-  msg.innerText = result.error || "Erro ao enviar link de acesso.";
-  btn.innerText = "Receber link de acesso";
-  btn.disabled = false;
-  return;
-}
-
-      msg.innerText = "Link enviado! Verifique seu e-mail 📩";
-      btn.innerText = "Reenviar link de acesso";
-      btn.disabled = false;
+      showCodeStep();
     });
+
+    verifyCodeBtn.addEventListener("click", async function () {
+      const code = codeInput.value.trim();
+
+      if (!code || code.length < 6) {
+        msg.innerText = "Digite o código de 6 dígitos.";
+        return;
+      }
+
+      msg.innerText = "";
+      verifyCodeBtn.innerText = "Validando...";
+      verifyCodeBtn.disabled = true;
+
+      const response = await fetch("/api/verificar-codigo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: currentEmail,
+          code: code
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        msg.innerText = result.error || "Código inválido.";
+        verifyCodeBtn.innerText = "Entrar na calculadora";
+        verifyCodeBtn.disabled = false;
+        return;
+      }
+
+      msg.innerText = "Código validado! Entrando...";
+      window.location.href = result.magic_link;
+    });
+
+    codeInput.addEventListener("input", function () {
+      this.value = this.value.replace(/\D/g, "").slice(0, 6);
+
+      if (this.value.length === 6) {
+        verifyCodeBtn.click();
+      }
+    });
+
+    backBtn.addEventListener("click", showEmailStep);
   </script>
 
   <style>
@@ -256,6 +315,13 @@ if (!response.ok) {
       transition: .2s ease;
     }
 
+    .mu-code-input {
+      text-align: center;
+      font-size: 24px !important;
+      font-weight: 900;
+      letter-spacing: 8px;
+    }
+
     .mu-form input::placeholder {
       color: #71717a;
     }
@@ -290,12 +356,24 @@ if (!response.ok) {
       transform: none;
     }
 
+    .mu-secondary-btn {
+      background: rgba(255,255,255,.06) !important;
+      color: #d4d4d8 !important;
+      box-shadow: none !important;
+      border: 1px solid rgba(255,255,255,.10) !important;
+    }
+
+    .mu-secondary-btn:hover {
+      background: rgba(255,255,255,.10) !important;
+    }
+
     #msg {
       min-height: 22px;
       margin: 14px 0 0;
       text-align: center;
       color: #a1a1aa;
       font-size: 14px;
+      line-height: 1.45;
     }
 
     .mu-footer {
